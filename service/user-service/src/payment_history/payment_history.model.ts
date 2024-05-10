@@ -14,6 +14,11 @@ enum PaymentStatus {
   FAILED = 'failed',
 }
 
+enum TransactionType {
+  RECEIVER = 'receiver',
+  SENDER = 'sender',
+}
+
 @Table
 export class PaymentHistory extends Model<PaymentHistory> {
   @Column({
@@ -25,6 +30,11 @@ export class PaymentHistory extends Model<PaymentHistory> {
     type: DataType.ENUM(...Object.values(PaymentStatus)),
   })
   status: PaymentStatus;
+
+  @Column({
+    type: DataType.ENUM(...Object.values(TransactionType)),
+  })
+  type: TransactionType;
 
   @Column
   id_transaction: string;

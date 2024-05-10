@@ -3,13 +3,28 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Transaction, TransactionDocument } from './transaction.schema';
 import { Model } from 'mongoose';
 import { IPaymentAccount } from './interface/payment_account.interface';
+import {
+  ClientProxy,
+  ClientProxyFactory,
+  Transport,
+} from '@nestjs/microservices';
 
 @Injectable()
 export class TransactionService {
+  private readonly userServiceClient: ClientProxy;
+
   constructor(
     @InjectModel(Transaction.name)
     private readonly transaction: Model<TransactionDocument>,
-  ) {}
+  ) {
+    this.userServiceClient = ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [process.env.RABBITMQ_HOST],
+        queue: 'user_service',
+      },
+    });
+  }
 
   /**
    * sending money from the source account to the registered destination account
@@ -64,6 +79,16 @@ export class TransactionService {
         );
       }
 
+      // create a new transaction
+      const createTransaction = await this.transaction.create({
+        amount,
+        currency,
+        description,
+        status: 'success',
+        from_address,
+        to_address,
+      });
+
       // update the balance of each account
       await fetch(
         `${process.env.USER_SERVICE}/user/payment-account/${from_address}`,
@@ -91,16 +116,24 @@ export class TransactionService {
         },
       );
 
-      // TODO : send transaction history to the appropriate account
-
-      return this.transaction.create({
+      // event to record transaction history
+      this.userServiceClient.emit('add.history_transaction', {
         amount,
-        currency,
-        description,
         status: 'success',
-        from_address,
-        to_address,
+        type: 'sender',
+        id_transaction: createTransaction.id,
+        account_number: from_address,
       });
+
+      this.userServiceClient.emit('add.history_transaction', {
+        amount,
+        status: 'success',
+        type: 'receiver',
+        id_transaction: createTransaction.id,
+        account_number: to_address,
+      });
+
+      return createTransaction;
     } catch (error) {
       throw error;
     }

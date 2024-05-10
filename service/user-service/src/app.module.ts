@@ -10,6 +10,7 @@ import { PaymentAccount } from './payment_account/payment_account.model';
 import { PaymentHistoryModule } from './payment_history/payment_history.module';
 import { PaymentHistory } from './payment_history/payment_history.model';
 import { AuthModule } from './auth/auth.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -31,6 +32,23 @@ import { AuthModule } from './auth/auth.module';
       models: [Users, PaymentAccount, PaymentHistory],
       autoLoadModels: true,
     }),
+
+    /**
+     * setting queue routes on rabbitmq
+     */
+    ClientsModule.register([
+      {
+        name: 'USER_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [process.env.RABBITMQ_HOST],
+          queue: 'user_service',
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
+    ]),
 
     /**
      * rate limiter

@@ -22,8 +22,10 @@ services:
       - finance-network
     depends_on:
       - postgres
+      - rabbitmq
     environment:
       - DB_HOST=postgres
+      - RABBITMQ_HOST=amqp://rabbitmq:supersecret@rabbitmq:5672
 
   payment-service:
     build:
@@ -34,9 +36,11 @@ services:
       - finance-network
     depends_on:
       - mongodb
+      - rabbitmq
     environment:
       - MONGO_HOST=mongodb
       - USER_SERVICE=http://user-service:5001
+      - RABBITMQ_HOST=amqp://rabbitmq:supersecret@rabbitmq:5672
 
   rabbitmq:
     image: rabbitmq

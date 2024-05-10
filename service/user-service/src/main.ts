@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -38,8 +39,27 @@ async function bootstrap() {
   SwaggerModule.setup('user/docs', app, document);
 
   /**
-   * setting port
+   * Cek koneksi ke rabbitmq
+   */
+  app.connectMicroservice({
+    transport: Transport.RMQ,
+    options: {
+      urls: [process.env.RABBITMQ_HOST],
+      queue: 'user_service',
+      queueOptions: {
+        durable: true,
+      },
+    },
+  });
+
+  /**
+   * Start REST API server
    */
   await app.listen(5001);
+
+  /**
+   * Start consuming messages from RabbitMQ
+   */
+  await app.startAllMicroservices();
 }
 bootstrap();

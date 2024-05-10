@@ -5,6 +5,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { JwtModule } from '@nestjs/jwt';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -19,6 +20,23 @@ import { JwtModule } from '@nestjs/jwt';
       global: true,
       secret: process.env.JWT_SECRET,
     }),
+
+    /**
+     * setting queue routes on rabbitmq
+     */
+    ClientsModule.register([
+      {
+        name: 'USER_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [process.env.RABBITMQ_HOST],
+          queue: 'user_service',
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
+    ]),
 
     /**
      * rate limiter

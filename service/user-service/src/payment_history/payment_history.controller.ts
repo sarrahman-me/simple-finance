@@ -69,7 +69,13 @@ export class PaymentHistoryController {
   @Post()
   async create(
     @Body()
-    { amount, status, id_transaction, account_number }: Partial<PaymentHistory>,
+    {
+      amount,
+      status,
+      type,
+      id_transaction,
+      account_number,
+    }: Partial<PaymentHistory>,
   ): Promise<responseType> {
     // validate input
     if (!amount || !status || !id_transaction || !account_number) {
@@ -102,6 +108,7 @@ export class PaymentHistoryController {
       const data = await this.historyService.create({
         amount,
         status,
+        type,
         id_transaction,
         account_number,
       });

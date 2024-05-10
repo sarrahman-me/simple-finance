@@ -87,6 +87,7 @@ export class PaymentHistoryService {
   async create({
     amount,
     status,
+    type,
     id_transaction,
     account_number,
   }: Partial<PaymentHistory>): Promise<PaymentHistory> {
@@ -100,6 +101,7 @@ export class PaymentHistoryService {
     return this.paymentHistory.create({
       account_number,
       id_transaction,
+      type,
       status,
       amount,
     });
