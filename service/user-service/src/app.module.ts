@@ -45,10 +45,10 @@ import { AuthModule } from './auth/auth.module';
     /**
      * other modules
      */
-    UsersModule,
     PaymentAccountModule,
     PaymentHistoryModule,
     AuthModule,
+    UsersModule,
   ],
   providers: [
     /**

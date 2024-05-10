@@ -35,6 +35,32 @@ export class PaymentAccountService {
   }
 
   /**
+   * Get payment account data based on matching username and account number
+   * This is useful for checking payment account ownership
+   * @param username
+   * @param account_number
+   * @returns appropriate data
+   */
+
+  async findByUsernameAndAccountNumber(
+    username: string,
+    account_number: string,
+  ): Promise<PaymentAccount> {
+    const data = await this.paymentAccount.findOne({
+      where: {
+        account_number,
+        username,
+      },
+    });
+
+    if (!data) {
+      throw new NotFoundException('payment account not found');
+    }
+
+    return data;
+  }
+
+  /**
    * get payment account based on account number
    * @param account_number primary key
    * @returns appropriate payment account
@@ -109,8 +135,22 @@ export class PaymentAccountService {
    * @returns deleted payment account
    */
 
-  async delete(account_number: string): Promise<PaymentAccount> {
-    const data = await this.paymentAccount.findByPk(account_number);
+  async delete(
+    account_number: string,
+    username: string,
+  ): Promise<PaymentAccount> {
+    const data = await this.paymentAccount.findOne({
+      where: {
+        account_number,
+        username,
+      },
+    });
+
+    if (data.balance > 0) {
+      throw new BadRequestException(
+        'the payment account has a remaining balance, move the balance to another account first before deleting',
+      );
+    }
 
     if (!data) {
       throw new NotFoundException('payment account not found');
@@ -119,6 +159,7 @@ export class PaymentAccountService {
     await this.paymentAccount.destroy({
       where: {
         account_number,
+        username,
       },
     });
 

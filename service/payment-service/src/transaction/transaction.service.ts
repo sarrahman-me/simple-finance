@@ -17,17 +17,27 @@ export class TransactionService {
    * @returns successful transaction
    */
 
-  async send({
-    amount,
-    currency,
-    description,
-    from_address,
-    to_address,
-  }: Partial<Transaction>): Promise<Transaction> {
+  async send(
+    {
+      amount,
+      currency,
+      description,
+      from_address,
+      to_address,
+    }: Partial<Transaction>,
+    token: string,
+  ): Promise<Transaction> {
     try {
-      // check data from the payment account source
+      // check data from the payment account source and this account number must be owned by the money sender
       const responseSourceAccount: { data: IPaymentAccount } = await fetch(
         `${process.env.USER_SERVICE}/user/payment-account/${from_address}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        },
       ).then((res) => res.json());
 
       const sourceAccount = responseSourceAccount.data;
@@ -38,7 +48,7 @@ export class TransactionService {
 
       // check data from the payment account destination
       const responseDestinationAccount: { data: IPaymentAccount } = await fetch(
-        `${process.env.USER_SERVICE}/user/payment-account/${to_address}`,
+        `${process.env.USER_SERVICE}/user/payment-account/check/${to_address}`,
       ).then((res) => res.json());
 
       const destinationAccount = responseDestinationAccount.data;
@@ -63,7 +73,7 @@ export class TransactionService {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            balance: Number(sourceAccount.balance) - amount,
+            balance: sourceAccount.balance - amount,
           }),
         },
       );
@@ -76,12 +86,12 @@ export class TransactionService {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            balance: Number(destinationAccount.balance) + amount,
+            balance: Number(destinationAccount.balance) + amount, // destinationAccount.balance must be converted to a number first because of stringify which can cause errors if there is addition (+)
           }),
         },
       );
 
-      // TODO : mengirimkan history transaksi ke masing masing akun
+      // TODO : send transaction history to the appropriate account
 
       return this.transaction.create({
         amount,

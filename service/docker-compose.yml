@@ -1,42 +1,42 @@
 version: "3"
 services:
-  # gateway:
-  #   build:
-  #     context: ./gateway
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "80:80"
-  #   container_name: gateway
-  #   depends_on:
-  #     - user-service
-  #     - payment-service
-  #   networks:
-  #     - finance-network
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    container_name: gateway
+    depends_on:
+      - user-service
+      - payment-service
+    networks:
+      - finance-network
 
-  # user-service:
-  #   build:
-  #     context: ./user-service
-  #     dockerfile: Dockerfile
-  #   container_name: user-service
-  #   networks:
-  #     - finance-network
-  #   depends_on:
-  #     - postgres
-  #   environment:
-  #     - DB_HOST=postgres
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    networks:
+      - finance-network
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
 
-  # payment-service:
-  #   build:
-  #     context: ./payment-service
-  #     dockerfile: Dockerfile
-  #   container_name: payment-service
-  #   networks:
-  #     - finance-network
-  #   depends_on:
-  #     - mongodb
-  #   environment:
-  #     - MONGO_HOST=mongodb
-  #     - USER_SERVICE=http://user-service:5001
+  payment-service:
+    build:
+      context: ./payment-service
+      dockerfile: Dockerfile
+    container_name: payment-service
+    networks:
+      - finance-network
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_HOST=mongodb
+      - USER_SERVICE=http://user-service:5001
 
   rabbitmq:
     image: rabbitmq

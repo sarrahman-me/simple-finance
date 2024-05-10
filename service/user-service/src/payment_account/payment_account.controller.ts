@@ -8,9 +8,12 @@ import {
   Param,
   Patch,
   Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { PaymentAccountService } from './payment_account.service';
 import { PaymentAccount } from './payment_account.model';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 interface responseType {
   message: string;
@@ -22,12 +25,22 @@ interface responseType {
 export class PaymentAccountController {
   constructor(private readonly paymentAccountService: PaymentAccountService) {}
 
-  @Get('/username/:username')
-  async findByUsername(
-    @Param('username') username: string,
+  @UseGuards(AuthGuard)
+  @Get()
+  async findAll(
+    @Request()
+    req: {
+      user: {
+        name: string;
+        username: string;
+        email: string;
+      };
+    },
   ): Promise<responseType> {
     try {
-      const data = await this.paymentAccountService.findAllByUsername(username);
+      const data = await this.paymentAccountService.findAllByUsername(
+        req.user.username,
+      );
 
       return {
         message: 'successfully got all payment accounts',
@@ -39,8 +52,38 @@ export class PaymentAccountController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Get('/:account_number')
   async find(
+    @Request()
+    req: {
+      user: {
+        name: string;
+        username: string;
+        email: string;
+      };
+    },
+    @Param('account_number') account_number: string,
+  ): Promise<responseType> {
+    try {
+      const data =
+        await this.paymentAccountService.findByUsernameAndAccountNumber(
+          req.user.username,
+          account_number,
+        );
+
+      return {
+        message: 'successfully got payment accounts',
+        status: HttpStatus.OK,
+        data,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('/check/:account_number')
+  async checkOwnership(
     @Param('account_number') account_number: string,
   ): Promise<responseType> {
     try {
@@ -57,16 +100,28 @@ export class PaymentAccountController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post()
   async create(
-    @Body() { name, username }: Partial<PaymentAccount>,
+    @Request()
+    req: {
+      user: {
+        name: string;
+        username: string;
+        email: string;
+      };
+    },
+    @Body() { name }: Partial<PaymentAccount>,
   ): Promise<responseType> {
-    if (!name || !username) {
+    if (!name) {
       throw new BadRequestException('incomplete data');
     }
 
     try {
-      const data = await this.paymentAccountService.add(name, username);
+      const data = await this.paymentAccountService.add(
+        name,
+        req.user.username,
+      );
 
       return {
         message: 'successfully added payment account',
@@ -83,6 +138,16 @@ export class PaymentAccountController {
     @Param('account_number') account_number: string,
     @Body() { name, balance }: Partial<PaymentAccount>,
   ): Promise<responseType> {
+    // Validate balance
+    if (isNaN(balance) || balance < 0) {
+      throw new BadRequestException({
+        message: 'Invalid balance',
+        error: {
+          balance: 'the balance amount is invalid or a negative number',
+        },
+      });
+    }
+
     try {
       const data = await this.paymentAccountService.update(account_number, {
         name,
@@ -99,12 +164,24 @@ export class PaymentAccountController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Delete('/:account_number')
   async delete(
+    @Request()
+    req: {
+      user: {
+        name: string;
+        username: string;
+        email: string;
+      };
+    },
     @Param('account_number') account_number: string,
   ): Promise<responseType> {
     try {
-      const data = await this.paymentAccountService.delete(account_number);
+      const data = await this.paymentAccountService.delete(
+        account_number,
+        req.user.username,
+      );
 
       return {
         message: 'successfully deleted payment account',

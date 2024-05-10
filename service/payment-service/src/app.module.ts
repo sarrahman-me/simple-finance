@@ -4,11 +4,20 @@ import { ConfigModule } from '@nestjs/config';
 import { TransactionModule } from './transaction/transaction.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+
+    /**
+     * JWT config
+     */
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
     }),
 
     /**

@@ -4,9 +4,12 @@ import {
   Controller,
   HttpStatus,
   Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { Transaction } from './transaction.schema';
+import { AuthGuard } from './auth.guard';
 
 interface responseType {
   message: string;
@@ -18,8 +21,13 @@ interface responseType {
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
+  @UseGuards(AuthGuard)
   @Post('send')
   async send(
+    @Request()
+    req: {
+      token: string;
+    },
     @Body()
     {
       amount,
@@ -62,13 +70,16 @@ export class TransactionController {
     }
 
     try {
-      const data = await this.transactionService.send({
-        amount,
-        currency,
-        description,
-        from_address,
-        to_address,
-      });
+      const data = await this.transactionService.send(
+        {
+          amount,
+          currency,
+          description,
+          from_address,
+          to_address,
+        },
+        req.token,
+      );
 
       return {
         message: 'successfully sent money to the destination account',
