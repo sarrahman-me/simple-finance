@@ -1,13 +1,21 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { PaymentAccount } from './payment_account.model';
 import { GeneratorService } from 'src/generator/generator.service';
+import { Users } from 'src/users/users.model';
 
 @Injectable()
 export class PaymentAccountService {
   constructor(
     @InjectModel(PaymentAccount)
     private readonly paymentAccount: typeof PaymentAccount,
+
+    @InjectModel(Users)
+    private readonly users: typeof Users,
 
     private readonly generator: GeneratorService,
   ) {}
@@ -48,12 +56,19 @@ export class PaymentAccountService {
    * @returns newly created payment account
    */
 
-  async add(name: string): Promise<PaymentAccount> {
+  async add(name: string, username: string): Promise<PaymentAccount> {
+    const existingUser = await this.users.findByPk(username);
+
+    if (!existingUser) {
+      throw new BadRequestException('Invalid User');
+    }
+
     const account_number = this.generator.accountNumber();
     const balance_default = 0.0;
 
     return this.paymentAccount.create({
       account_number,
+      username,
       balance: balance_default,
       name,
     });

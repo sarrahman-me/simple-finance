@@ -9,6 +9,7 @@ import { PaymentAccountModule } from './payment_account/payment_account.module';
 import { PaymentAccount } from './payment_account/payment_account.model';
 import { PaymentHistoryModule } from './payment_history/payment_history.module';
 import { PaymentHistory } from './payment_history/payment_history.model';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { PaymentHistory } from './payment_history/payment_history.model';
     UsersModule,
     PaymentAccountModule,
     PaymentHistoryModule,
+    AuthModule,
   ],
   providers: [
     /**

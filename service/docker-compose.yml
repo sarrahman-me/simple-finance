@@ -1,7 +1,9 @@
 version: "3"
 services:
   # gateway:
-  #   image: gateway
+  #   build:
+  #     context: ./gateway
+  #     dockerfile: Dockerfile
   #   ports:
   #     - "80:80"
   #   container_name: gateway
@@ -12,7 +14,9 @@ services:
   #     - finance-network
 
   # user-service:
-  #   image: user-service
+  #   build:
+  #     context: ./user-service
+  #     dockerfile: Dockerfile
   #   container_name: user-service
   #   networks:
   #     - finance-network
@@ -22,7 +26,9 @@ services:
   #     - DB_HOST=postgres
 
   # payment-service:
-  #   image: payment-service
+  #   build:
+  #     context: ./payment-service
+  #     dockerfile: Dockerfile
   #   container_name: payment-service
   #   networks:
   #     - finance-network

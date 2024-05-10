@@ -6,6 +6,7 @@ import {
   Post,
   UseGuards,
   Request,
+  Body,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Users } from 'src/users/users.model';
@@ -22,11 +23,10 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
-  async register({
-    name,
-    email,
-    password,
-  }: Partial<Users>): Promise<responseType> {
+  async register(
+    @Body()
+    { name, email, password }: Partial<Users>,
+  ): Promise<responseType> {
     if (!name || !email || !password) {
       throw new BadRequestException('incomplete data');
     }
@@ -49,13 +49,15 @@ export class AuthController {
   }
 
   @Post('/login')
-  async login({ email, password }: Partial<Users>): Promise<responseType> {
+  async login(
+    @Body() { email, password }: Partial<Users>,
+  ): Promise<responseType> {
     if (!email || !password) {
       throw new BadRequestException('incomplete data');
     }
 
     try {
-      const data = await this.authService.register({
+      const data = await this.authService.login({
         email,
         password,
       });

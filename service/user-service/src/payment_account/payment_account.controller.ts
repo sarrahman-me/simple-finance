@@ -58,13 +58,15 @@ export class PaymentAccountController {
   }
 
   @Post()
-  async create(@Body() { name }: { name: string }): Promise<responseType> {
-    if (!name) {
+  async create(
+    @Body() { name, username }: Partial<PaymentAccount>,
+  ): Promise<responseType> {
+    if (!name || !username) {
       throw new BadRequestException('incomplete data');
     }
 
     try {
-      const data = await this.paymentAccountService.add(name);
+      const data = await this.paymentAccountService.add(name, username);
 
       return {
         message: 'successfully added payment account',

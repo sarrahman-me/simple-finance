@@ -62,7 +62,9 @@ export class TransactionService {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ balance: sourceAccount.balance - amount }),
+          body: JSON.stringify({
+            balance: Number(sourceAccount.balance) - amount,
+          }),
         },
       );
 
@@ -74,7 +76,7 @@ export class TransactionService {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            balance: destinationAccount.balance + amount,
+            balance: Number(destinationAccount.balance) + amount,
           }),
         },
       );
@@ -90,14 +92,7 @@ export class TransactionService {
         to_address,
       });
     } catch (error) {
-      return this.transaction.create({
-        amount,
-        currency,
-        description,
-        status: 'failed',
-        from_address,
-        to_address,
-      });
+      throw error;
     }
   }
 }

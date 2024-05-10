@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   HttpStatus,
   Post,
@@ -13,18 +14,21 @@ interface responseType {
   data: Transaction;
 }
 
-@Controller('payment')
+@Controller('')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post('send')
-  async send({
-    amount,
-    currency,
-    description,
-    from_address,
-    to_address,
-  }: Partial<Transaction>): Promise<responseType> {
+  async send(
+    @Body()
+    {
+      amount,
+      currency,
+      description,
+      from_address,
+      to_address,
+    }: Partial<Transaction>,
+  ): Promise<responseType> {
     // Mandatory input validation
     if (!amount || !currency || !from_address || !to_address) {
       throw new BadRequestException({
