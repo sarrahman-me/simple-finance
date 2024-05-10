@@ -1,13 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PaymentHistory } from './payment_history.model';
 import { PaymentAccountService } from 'src/payment_account/payment_account.service';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class PaymentHistoryService {
   constructor(
+    @InjectModel(PaymentHistory)
     private readonly paymentHistory: typeof PaymentHistory,
 
-    private readonly paymentAccountService: PaymentAccountService,
+    private readonly paymentAccount: PaymentAccountService,
   ) {}
 
   /**
@@ -89,7 +91,7 @@ export class PaymentHistoryService {
     account_number,
   }: Partial<PaymentHistory>): Promise<PaymentHistory> {
     const paymentAccount =
-      await this.paymentAccountService.findByAccountNumber(account_number);
+      await this.paymentAccount.findByAccountNumber(account_number);
 
     if (!paymentAccount) {
       throw new NotFoundException('payment account not found');

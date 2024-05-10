@@ -23,7 +23,7 @@ interface responseType {
   };
 }
 
-@Controller('users')
+@Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

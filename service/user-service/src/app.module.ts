@@ -26,7 +26,7 @@ import { PaymentHistory } from './payment_history/payment_history.model';
       port: 5432,
       username: 'postgres',
       password: process.env.DB_PASSWORD,
-      database: 'tokokeramik',
+      database: 'finance',
       models: [Users, PaymentAccount, PaymentHistory],
       autoLoadModels: true,
     }),

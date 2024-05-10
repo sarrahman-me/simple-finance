@@ -1,0 +1,84 @@
+version: "3"
+services:
+  # gateway:
+  #   image: gateway
+  #   ports:
+  #     - "80:80"
+  #   container_name: gateway
+  #   depends_on:
+  #     - user-service
+  #     - payment-service
+  #   networks:
+  #     - finance-network
+
+  # user-service:
+  #   image: user-service
+  #   container_name: user-service
+  #   networks:
+  #     - finance-network
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     - DB_HOST=postgres
+
+  # payment-service:
+  #   image: payment-service
+  #   container_name: payment-service
+  #   networks:
+  #     - finance-network
+  #   depends_on:
+  #     - mongodb
+  #   environment:
+  #     - MONGO_HOST=mongodb
+  #     - USER_SERVICE=http://user-service:5001
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+    container_name: rabbitmq
+    networks:
+      - finance-network
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=supersecret
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecret
+      - POSTGRES_DB=finance
+    container_name: postgres
+    networks:
+      - finance-network
+    volumes:
+      - ./postgres/backup:/pg-backup
+      - ./postgres/data:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=payment-service
+    container_name: mongodb
+    volumes:
+      - ./mongo/data:/data/db
+      - ./mongo/backup:/mongo-backup
+    networks:
+      - finance-network
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    container_name: redis
+    networks:
+      - finance-network
+
+networks:
+  finance-network:
+    driver: bridge

@@ -23,7 +23,7 @@ interface responseType {
   };
 }
 
-@Controller()
+@Controller('history-account')
 export class PaymentHistoryController {
   constructor(private readonly historyService: PaymentHistoryService) {}
 

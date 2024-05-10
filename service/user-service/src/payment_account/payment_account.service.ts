@@ -70,6 +70,12 @@ export class PaymentAccountService {
     account_number: string,
     { name, balance }: Partial<PaymentAccount>,
   ): Promise<PaymentAccount> {
+    const existingData = await this.paymentAccount.findByPk(account_number);
+
+    if (!existingData) {
+      throw new NotFoundException('payment account not found');
+    }
+
     await this.paymentAccount.update(
       { name, balance },
       {
