@@ -54,7 +54,9 @@ export class PaymentAccountService {
     });
 
     if (!data) {
-      throw new NotFoundException('payment account not found');
+      throw new NotFoundException(
+        'payment account not found or this is not your payment account',
+      );
     }
 
     return data;

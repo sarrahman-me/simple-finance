@@ -15,7 +15,7 @@ import { AuthGuard } from './auth.guard';
 interface responseType {
   message: string;
   status: number;
-  data: any;
+  data?: any;
 }
 
 @Controller('/auth')
@@ -32,7 +32,7 @@ export class AuthController {
     }
 
     try {
-      const data = await this.authService.register({
+      await this.authService.register({
         name,
         email,
         password,
@@ -41,7 +41,6 @@ export class AuthController {
       return {
         message: 'registration successful',
         status: HttpStatus.CREATED,
-        data,
       };
     } catch (error) {
       throw error;

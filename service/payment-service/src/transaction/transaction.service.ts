@@ -97,6 +97,7 @@ export class TransactionService {
         status: 'success',
         from_address,
         to_address,
+        timestamp: new Date(),
       });
 
       // update the balance of each account

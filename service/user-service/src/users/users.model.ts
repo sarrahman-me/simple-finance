@@ -25,6 +25,8 @@ export class Users extends Model<Users> {
   @Column
   password: string;
 
+  // relationship
+
   @HasMany(() => PaymentAccount, { onDelete: 'CASCADE' })
   payment_accounts: PaymentAccount[];
 }
