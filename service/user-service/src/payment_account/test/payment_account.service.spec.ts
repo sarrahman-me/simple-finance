@@ -9,7 +9,7 @@ import { UsersService } from '../../users/users.service';
 import { UsersModule } from '../../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 
-describe('Users Service Test', () => {
+describe('Payment Account Service Test', () => {
   let paymentAccout: PaymentAccountService;
   let testDataAccount: PaymentAccount;
   let userService: UsersService;

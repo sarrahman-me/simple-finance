@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PaymentHistory } from './payment_history.model';
-import { PaymentAccountService } from 'src/payment_account/payment_account.service';
+import { PaymentAccountService } from '../payment_account/payment_account.service';
 import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()

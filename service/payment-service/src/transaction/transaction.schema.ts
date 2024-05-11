@@ -11,6 +11,9 @@ export type TransactionDocument = HydratedDocument<Transaction>;
 
 @Schema({ timestamps: true })
 export class Transaction {
+  @Prop()
+  id_transaction: string;
+
   @Prop({ type: Number })
   amount: number;
 

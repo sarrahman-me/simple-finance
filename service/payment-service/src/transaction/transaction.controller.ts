@@ -10,11 +10,16 @@ import {
 import { TransactionService } from './transaction.service';
 import { Transaction } from './transaction.schema';
 import { AuthGuard } from './auth.guard';
+import { IPaymentAccount } from './interface/payment_account.interface';
 
 interface responseType {
   message: string;
   status: number;
-  data: Transaction;
+  data: {
+    transaction: Transaction;
+    from: Partial<IPaymentAccount>;
+    to: Partial<IPaymentAccount>;
+  };
 }
 
 @Controller('')

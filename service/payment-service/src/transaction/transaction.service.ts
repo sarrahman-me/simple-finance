@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Transaction, TransactionDocument } from './transaction.schema';
@@ -41,7 +42,11 @@ export class TransactionService {
       to_address,
     }: Partial<Transaction>,
     token: string,
-  ): Promise<Transaction> {
+  ): Promise<{
+    transaction: Transaction;
+    from: Partial<IPaymentAccount>;
+    to: Partial<IPaymentAccount>;
+  }> {
     try {
       // check data from the payment account source and this account number must be owned by the money sender
       const responseSourceAccount: { data: IPaymentAccount } = await fetch(
@@ -58,7 +63,9 @@ export class TransactionService {
       const sourceAccount = responseSourceAccount.data;
 
       if (!sourceAccount) {
-        throw new BadRequestException('payment account source is invalid');
+        throw new BadRequestException(
+          'payment account source is invalid, You have to send money from your own payment account',
+        );
       }
 
       // check data from the payment account destination
@@ -79,8 +86,11 @@ export class TransactionService {
         );
       }
 
+      const id_transaction = uuidv4();
+
       // create a new transaction
       const createTransaction = await this.transaction.create({
+        id_transaction,
         amount,
         currency,
         description,
@@ -121,7 +131,7 @@ export class TransactionService {
         amount,
         status: 'success',
         type: 'sender',
-        id_transaction: createTransaction.id,
+        id_transaction: id_transaction,
         account_number: from_address,
       });
 
@@ -129,11 +139,21 @@ export class TransactionService {
         amount,
         status: 'success',
         type: 'receiver',
-        id_transaction: createTransaction.id,
+        id_transaction: id_transaction,
         account_number: to_address,
       });
 
-      return createTransaction;
+      return {
+        transaction: createTransaction,
+        from: {
+          account_number: sourceAccount.account_number,
+          name: sourceAccount.name,
+        },
+        to: {
+          account_number: destinationAccount.account_number,
+          name: destinationAccount.name,
+        },
+      };
     } catch (error) {
       throw error;
     }

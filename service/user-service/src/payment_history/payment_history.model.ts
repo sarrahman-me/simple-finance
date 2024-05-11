@@ -6,7 +6,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { PaymentAccount } from 'src/payment_account/payment_account.model';
+import { PaymentAccount } from '../payment_account/payment_account.model';
 
 enum PaymentStatus {
   SUCCESS = 'success',
@@ -29,12 +29,12 @@ export class PaymentHistory extends Model<PaymentHistory> {
   @Column({
     type: DataType.ENUM(...Object.values(PaymentStatus)),
   })
-  status: PaymentStatus;
+  status: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(TransactionType)),
   })
-  type: TransactionType;
+  type: string;
 
   @Column
   id_transaction: string;
