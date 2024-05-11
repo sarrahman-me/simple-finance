@@ -81,14 +81,6 @@ services:
     networks:
       - finance-network
 
-  redis:
-    image: redis
-    ports:
-      - "6379:6379"
-    container_name: redis
-    networks:
-      - finance-network
-
 networks:
   finance-network:
     driver: bridge

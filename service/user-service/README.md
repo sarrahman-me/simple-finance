@@ -37,6 +37,7 @@ User service is an api that will handle account creation (authentication),manage
 - `GET` **/user/payment-account**: Get all payment account data owned by the logged in user (can't see other users' payment accounts)
 - `GET` **/user/payment-account/:account_number**: Get details of a payment account (can't see other users' payment accounts)
 - `GET` **/user/payment-account/check/:account_number**: Check payment account details and can view other users' payment accounts
+- `POST` **/user/payment-account**: Creates a new payment account for the currently logged in user
 - `PATCH` **/user/payment-account/:account_number**: Edit a user's payment account by account number
 - `DELETE` **/user/payment-account/:account_number**: Delete a user's payment account by account number
 
