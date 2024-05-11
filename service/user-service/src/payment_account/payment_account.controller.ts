@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { PaymentAccountService } from './payment_account.service';
 import { PaymentAccount } from './payment_account.model';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 
 interface responseType {
   message: string;

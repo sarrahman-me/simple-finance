@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(
-      `mongodb://${process.env.MONGO_HOST}:27017/products-service`,
+      `mongodb://${process.env.MONGO_HOST}:27017/payment-service`,
     ),
   ],
 })

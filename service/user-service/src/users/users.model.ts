@@ -6,7 +6,7 @@ import {
   Table,
   Unique,
 } from 'sequelize-typescript';
-import { PaymentAccount } from 'src/payment_account/payment_account.model';
+import { PaymentAccount } from '../payment_account/payment_account.model';
 
 @Table
 export class Users extends Model<Users> {

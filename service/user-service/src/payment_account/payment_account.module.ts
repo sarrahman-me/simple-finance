@@ -3,8 +3,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { PaymentAccount } from './payment_account.model';
 import { PaymentAccountService } from './payment_account.service';
 import { PaymentAccountController } from './payment_account.controller';
-import { GeneratorModule } from 'src/generator/generator.module';
-import { Users } from 'src/users/users.model';
+import { GeneratorModule } from '../generator/generator.module';
+import { Users } from '../users/users.model';
 
 @Module({
   imports: [

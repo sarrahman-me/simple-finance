@@ -9,7 +9,7 @@ import { Users } from './users.model';
 import validator from 'validator';
 import * as bcrypt from 'bcrypt';
 import { Op } from 'sequelize';
-import { GeneratorService } from 'src/generator/generator.service';
+import { GeneratorService } from '../generator/generator.service';
 
 @Injectable()
 export class UsersService {
@@ -164,11 +164,13 @@ export class UsersService {
 
     let hashedPassword: string = existingUser.password;
 
-    // re-hash if password changes
-    if (password !== existingUser.password) {
-      const salt = await bcrypt.genSalt();
+    if (password) {
+      // re-hash if password changes
+      if (password !== existingUser.password) {
+        const salt = await bcrypt.genSalt();
 
-      hashedPassword = await bcrypt.hash(password, salt);
+        hashedPassword = await bcrypt.hash(password, salt);
+      }
     }
 
     // make data changes

@@ -11,6 +11,7 @@ import { PaymentHistoryModule } from './payment_history/payment_history.module';
 import { PaymentHistory } from './payment_history/payment_history.model';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -18,6 +19,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
      * module configuration .env
      */
     ConfigModule.forRoot(),
+
+    /**
+     * JWT config
+     */
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+    }),
 
     /**
      * ORM Sequelize

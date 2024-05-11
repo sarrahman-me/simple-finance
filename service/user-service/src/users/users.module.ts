@@ -3,7 +3,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Users } from './users.model';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { GeneratorModule } from 'src/generator/generator.module';
+import { GeneratorModule } from '../generator/generator.module';
 
 @Module({
   imports: [SequelizeModule.forFeature([Users]), GeneratorModule],

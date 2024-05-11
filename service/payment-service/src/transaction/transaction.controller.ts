@@ -44,13 +44,10 @@ export class TransactionController {
         error: {
           missing_fields: {
             amount: !amount ? 'amount is required' : '',
-
             currency: !currency ? 'currency is required' : '',
-
             from_address: !from_address
               ? 'Payment account source must be filled in'
               : '',
-
             to_address: !to_address
               ? 'payment account destination must be filled in'
               : '',

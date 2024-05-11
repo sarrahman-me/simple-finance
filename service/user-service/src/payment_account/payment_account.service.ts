@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { PaymentAccount } from './payment_account.model';
-import { GeneratorService } from 'src/generator/generator.service';
-import { Users } from 'src/users/users.model';
+import { GeneratorService } from '../generator/generator.service';
+import { Users } from '../users/users.model';
 
 @Injectable()
 export class PaymentAccountService {
