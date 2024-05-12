@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -51,6 +52,9 @@ export class PaymentAccountService {
         account_number,
         username,
       },
+      include: {
+        model: Users,
+      },
     });
 
     if (!data) {
@@ -68,14 +72,27 @@ export class PaymentAccountService {
    * @returns appropriate payment account
    */
 
-  async findByAccountNumber(account_number: string): Promise<PaymentAccount> {
-    const data = await this.paymentAccount.findByPk(account_number);
+  async findByAccountNumber(
+    account_number: string,
+  ): Promise<{ name: string; account_number: string; pic: string }> {
+    const data = await this.paymentAccount.findOne({
+      where: {
+        account_number,
+      },
+      include: {
+        model: Users,
+      },
+    });
 
     if (!data) {
       throw new NotFoundException('payment account not found');
     }
 
-    return data;
+    return {
+      account_number: data.account_number,
+      name: data.name,
+      pic: data.user.name,
+    };
   }
 
   /**
@@ -89,6 +106,18 @@ export class PaymentAccountService {
 
     if (!existingUser) {
       throw new BadRequestException('Invalid User');
+    }
+
+    // prevent duplication of payment accounts with the same name for the same account
+    const existingData = await this.paymentAccount.findOne({
+      where: {
+        name,
+        username,
+      },
+    });
+
+    if (existingData) {
+      throw new ConflictException('Payment Account has been added');
     }
 
     const account_number = this.generator.accountNumber();

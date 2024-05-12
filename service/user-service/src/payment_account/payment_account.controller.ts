@@ -18,7 +18,10 @@ import { AuthGuard } from '../auth/auth.guard';
 interface responseType {
   message: string;
   status: number;
-  data: PaymentAccount | PaymentAccount[];
+  data:
+    | PaymentAccount
+    | PaymentAccount[]
+    | { name: string; account_number: string; pic: string };
 }
 
 @Controller('payment-account')

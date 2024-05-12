@@ -21,25 +21,25 @@ Docker is the easiest and most secure way to run these applications without any 
 1. Clone this repository from GitHub
 
    ```bash
-   $ git clone https://github.com/sarrahman-me/simple-finance.git
+   git clone https://github.com/sarrahman-me/simple-finance.git
    ```
 
 2. Open a terminal and navigate to the services directory containing the docker-compose.yml file
 
    ```bash
-   $ cd /service
+   cd /simple-finance/service
    ```
 
 3. Run all applications and databases using docker
 
    ```bash
-   $ docker-compose up
+   docker-compose up
    ```
 
 4. Make sure everything is running by trying to access the api gateway
 
    ```bash
-   $ http://localhost
+   http://localhost
    ```
 
 ## Entity Relationship Diagram
