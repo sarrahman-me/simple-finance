@@ -3,4 +3,8 @@ export interface IPaymentAccount {
   name: string;
   balance: number;
   username: string;
+  pic: string;
+  user: {
+    name: string;
+  };
 }

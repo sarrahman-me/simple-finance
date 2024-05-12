@@ -21,7 +21,7 @@ interface responseType {
   data:
     | PaymentAccount
     | PaymentAccount[]
-    | { name: string; account_number: string; pic: string };
+    | { name: string; account_number: string; pic: string; balance: number };
 }
 
 @Controller('payment-account')

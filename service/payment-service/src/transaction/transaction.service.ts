@@ -69,7 +69,14 @@ export class TransactionService {
       }
 
       // check data from the payment account destination
-      const responseDestinationAccount: { data: IPaymentAccount } = await fetch(
+      const responseDestinationAccount: {
+        data: {
+          name: string;
+          account_number: string;
+          pic: string;
+          balance: number;
+        };
+      } = await fetch(
         `${process.env.USER_SERVICE}/user/payment-account/check/${to_address}`,
       ).then((res) => res.json());
 
@@ -149,10 +156,12 @@ export class TransactionService {
         from: {
           account_number: sourceAccount.account_number,
           name: sourceAccount.name,
+          pic: sourceAccount.user.name,
         },
         to: {
           account_number: destinationAccount.account_number,
           name: destinationAccount.name,
+          pic: destinationAccount.pic,
         },
       };
     } catch (error) {

@@ -72,9 +72,12 @@ export class PaymentAccountService {
    * @returns appropriate payment account
    */
 
-  async findByAccountNumber(
-    account_number: string,
-  ): Promise<{ name: string; account_number: string; pic: string }> {
+  async findByAccountNumber(account_number: string): Promise<{
+    name: string;
+    account_number: string;
+    pic: string;
+    balance: number;
+  }> {
     const data = await this.paymentAccount.findOne({
       where: {
         account_number,
@@ -92,6 +95,7 @@ export class PaymentAccountService {
       account_number: data.account_number,
       name: data.name,
       pic: data.user.name,
+      balance: data.balance,
     };
   }
 
