@@ -26,6 +26,8 @@ services:
     environment:
       - DB_HOST=postgres
       - RABBITMQ_HOST=amqp://rabbitmq:supersecret@rabbitmq:5672
+      - DB_PASSWORD=supersecret
+      - JWT_SECRET=abracadabra
 
   payment-service:
     build:
@@ -41,6 +43,7 @@ services:
       - MONGO_HOST=mongodb
       - USER_SERVICE=http://user-service:5001
       - RABBITMQ_HOST=amqp://rabbitmq:supersecret@rabbitmq:5672
+      - JWT_SECRET=abracadabra
 
   rabbitmq:
     image: rabbitmq
