@@ -7,13 +7,16 @@ export async function POST(request: Request) {
   const payload = await request.json();
 
   try {
-    const res = await fetch("http://localhost/user/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST_SERVER}/user/auth/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     const { message, statusCode }: responseType = await res.json();
 

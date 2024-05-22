@@ -18,13 +18,16 @@ export async function POST(request: Request) {
   const cookieStore = cookies();
 
   try {
-    const res = await fetch("http://localhost/user/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST_SERVER}/user/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     const { data, message, statusCode }: responseType = await res.json();
 

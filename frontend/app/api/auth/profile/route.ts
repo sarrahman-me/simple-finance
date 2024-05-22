@@ -16,12 +16,16 @@ export async function GET() {
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
 
-  const res = await fetch("http://localhost/user/auth/profile", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_HOST_SERVER}/user/auth/profile`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      next: { revalidate: 60 },
+    }
+  );
 
   const data: responseType = await res.json();
 
