@@ -9,7 +9,7 @@ interface buttonProps {
   variant?: "contained" | "outlined";
   disabled?: boolean;
   color?: "primary" | "secondary" | "red" | "orange" | "blue";
-  size?: "standart" | "small";
+  size?: "standart" | "small" | "large";
 }
 
 const Button = ({
@@ -61,6 +61,7 @@ const Button = ({
   };
 
   const sizeClass: Record<string, string> = {
+    large: "p-2 md:p-3 text-base",
     standart: "p-1.5 md:p-2 text-sm",
     small: "p-1 md:p-1.5 text-sm",
   };

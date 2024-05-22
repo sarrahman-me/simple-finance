@@ -1,3 +1,4 @@
+import { IPaymentAccount } from "@/interface/payment_account";
 import { cookies } from "next/headers";
 
 interface responseTypePOST {
@@ -11,21 +12,6 @@ interface responseTypePOST {
     updatedAt: string;
     createdAt: string;
   };
-}
-
-interface responseTypeGET {
-  message: string;
-  statusCode: number;
-  data: [
-    {
-      account_number: string;
-      name: string;
-      balance: string;
-      username: string;
-      createdAt: string;
-      updatedAt: string;
-    }[]
-  ];
 }
 
 export async function POST(request: Request) {
@@ -79,7 +65,7 @@ export async function GET() {
       }
     );
 
-    const { message, statusCode, data }: responseTypeGET = await res.json();
+    const { message, statusCode, data }: IPaymentAccount = await res.json();
 
     if (statusCode >= 400) {
       return Response.json({ message, statusCode }, { status: statusCode });

@@ -1,3 +1,4 @@
 import TemplateAuth from "./authPage";
+import PocketNotFound from "./pocketNotFound";
 
-export { TemplateAuth };
+export { TemplateAuth, PocketNotFound };

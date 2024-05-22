@@ -1,3 +1,9 @@
+import { AppBar } from "@/components/molecules";
+
 export default function Page() {
-  return <p>Transaction</p>;
+  return (
+    <div>
+      <AppBar title="Transaction" />
+    </div>
+  );
 }
