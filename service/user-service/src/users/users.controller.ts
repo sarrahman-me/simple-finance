@@ -13,7 +13,7 @@ import { Users } from './users.model';
 
 interface responseType {
   message: string;
-  status: number;
+  statusCode: number;
   data: Users | Users[];
   metadata?: {
     page: number;
@@ -42,7 +42,7 @@ export class UsersController {
 
       return {
         message: 'Successfully got all user data',
-        status: HttpStatus.OK,
+        statusCode: HttpStatus.OK,
         data,
         metadata,
       };
@@ -58,7 +58,7 @@ export class UsersController {
 
       return {
         message: 'Successfully got user data',
-        status: HttpStatus.OK,
+        statusCode: HttpStatus.OK,
         data,
       };
     } catch (error) {
@@ -76,7 +76,7 @@ export class UsersController {
 
       return {
         message: 'Successfully updated user data',
-        status: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.ACCEPTED,
         data,
       };
     } catch (error) {
@@ -91,7 +91,7 @@ export class UsersController {
 
       return {
         message: 'Successfully deleted user data',
-        status: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.ACCEPTED,
         data,
       };
     } catch (error) {

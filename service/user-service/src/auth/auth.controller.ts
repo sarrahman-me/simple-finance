@@ -14,7 +14,7 @@ import { AuthGuard } from './auth.guard';
 
 interface responseType {
   message: string;
-  status: number;
+  statusCode: number;
   data?: any;
 }
 
@@ -40,7 +40,7 @@ export class AuthController {
 
       return {
         message: 'registration successful',
-        status: HttpStatus.CREATED,
+        statusCode: HttpStatus.CREATED,
       };
     } catch (error) {
       throw error;
@@ -63,7 +63,7 @@ export class AuthController {
 
       return {
         message: 'Signed in successfully',
-        status: HttpStatus.CREATED,
+        statusCode: HttpStatus.CREATED,
         data,
       };
     } catch (error) {
@@ -86,7 +86,7 @@ export class AuthController {
     try {
       return {
         message: 'Successfully Get logged in user',
-        status: HttpStatus.OK,
+        statusCode: HttpStatus.OK,
         data: req.user,
       };
     } catch (error) {

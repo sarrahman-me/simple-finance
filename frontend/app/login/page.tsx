@@ -3,7 +3,7 @@ import { Button, Textfield } from "@/components/atoms";
 import auth_image from "@/public/svgs/auth.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ReactElement, useState } from "react";
+import { FormEvent, ReactElement, useState } from "react";
 
 export default function Page() {
   const router = useRouter();
@@ -12,22 +12,46 @@ export default function Page() {
     password: "",
   });
 
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (data.statusCode < 400) {
+      router.push("/dashboard");
+      return;
+    }
+
+    alert(data.message);
+  };
+
   return (
     <Template>
       <div className="space-y-10">
         <h2 className="text-lg text-primary-600 font-bold">Login :</h2>
-        <form className="space-y-3">
+        <form onSubmit={handleLogin} className="space-y-3">
           <Textfield
+            type="email"
             label="Email"
             placeholder="example@email.com"
             onChange={(v) => setPayload({ ...payload, email: v })}
           />
           <Textfield
+            type="password"
             label="Password"
             placeholder="* * * * * *"
             onChange={(v) => setPayload({ ...payload, password: v })}
           />
-          <Button fullWidth type="submit">
+          <Button
+            disabled={!payload.email || !payload.password}
+            fullWidth
+            type="submit"
+          >
             Login
           </Button>
         </form>

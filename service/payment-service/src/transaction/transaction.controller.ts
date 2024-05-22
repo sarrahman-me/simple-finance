@@ -14,7 +14,7 @@ import { IPaymentAccount } from './interface/payment_account.interface';
 
 interface responseType {
   message: string;
-  status: number;
+  statusCode: number;
   data: {
     transaction: Transaction;
     from: Partial<IPaymentAccount>;
@@ -85,7 +85,7 @@ export class TransactionController {
 
       return {
         message: 'successfully sent money to the destination account',
-        status: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.ACCEPTED,
         data,
       };
     } catch (error) {

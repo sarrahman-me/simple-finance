@@ -12,7 +12,7 @@ import { AuthGuard } from '../auth/auth.guard';
 
 interface responseType {
   message: string;
-  status: number;
+  statusCode: number;
   data: PaymentHistory | PaymentHistory[];
   metadata?: {
     page: number;
@@ -42,7 +42,7 @@ export class PaymentHistoryController {
 
       return {
         message: 'successfully obtained all transaction history',
-        status: HttpStatus.OK,
+        statusCode: HttpStatus.OK,
         data,
         metadata,
       };
@@ -59,7 +59,7 @@ export class PaymentHistoryController {
 
       return {
         message: 'successfully obtained transaction history',
-        status: HttpStatus.OK,
+        statusCode: HttpStatus.OK,
         data,
       };
     } catch (error) {

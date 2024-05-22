@@ -17,7 +17,7 @@ import { AuthGuard } from '../auth/auth.guard';
 
 interface responseType {
   message: string;
-  status: number;
+  statusCode: number;
   data:
     | PaymentAccount
     | PaymentAccount[]
@@ -47,7 +47,7 @@ export class PaymentAccountController {
 
       return {
         message: 'successfully got all payment accounts',
-        status: HttpStatus.OK,
+        statusCode: HttpStatus.OK,
         data,
       };
     } catch (error) {
@@ -77,7 +77,7 @@ export class PaymentAccountController {
 
       return {
         message: 'successfully got payment accounts',
-        status: HttpStatus.OK,
+        statusCode: HttpStatus.OK,
         data,
       };
     } catch (error) {
@@ -95,7 +95,7 @@ export class PaymentAccountController {
 
       return {
         message: 'successfully got payment accounts',
-        status: HttpStatus.OK,
+        statusCode: HttpStatus.OK,
         data,
       };
     } catch (error) {
@@ -128,7 +128,7 @@ export class PaymentAccountController {
 
       return {
         message: 'successfully added payment account',
-        status: HttpStatus.CREATED,
+        statusCode: HttpStatus.CREATED,
         data,
       };
     } catch (error) {
@@ -159,7 +159,7 @@ export class PaymentAccountController {
 
       return {
         message: 'successfully updated payment account',
-        status: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.ACCEPTED,
         data,
       };
     } catch (error) {
@@ -188,7 +188,7 @@ export class PaymentAccountController {
 
       return {
         message: 'successfully deleted payment account',
-        status: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.ACCEPTED,
         data,
       };
     } catch (error) {
