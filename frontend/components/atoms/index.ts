@@ -1,3 +1,4 @@
+import AddPocketCard from "./addPocketCard";
 import Button from "./button";
 import CardPocket from "./cardPocket";
 import CopyText from "./copyText";
@@ -18,4 +19,5 @@ export {
   Select,
   InputPaymentAccount,
   Textarea,
+  AddPocketCard,
 };

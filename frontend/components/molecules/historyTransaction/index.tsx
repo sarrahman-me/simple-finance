@@ -1,6 +1,7 @@
 import { IpaymentHistory } from "@/interface/payment_history";
 import { GetDataApi } from "@/utils/fetcher";
 import { formatCurrency } from "@/utils/formatCurrency";
+import formatDate from "@/utils/formatDate";
 
 export default async function HistoryTransaction({
   account_number,
@@ -19,7 +20,7 @@ export default async function HistoryTransaction({
       {data && data.length > 0 ? (
         <div className="space-y-2">
           <div className="flex justify-between items-center font-medium text-primary-600">
-            <span>Transaction ID</span>
+            <span>Time</span>
             <span>Status</span>
             <span>Type</span>
             <span>Amount</span>
@@ -29,7 +30,7 @@ export default async function HistoryTransaction({
               key={i}
               className="flex justify-between items-center p-2 border-b last:border-none bg-secondary"
             >
-              <span>{history.id_transaction}</span>
+              <span>{formatDate(history.createdAt)}</span>
               <span>
                 {history.status === "success" ? (
                   <p className="bg-green-50 p-1 text-green-600">Success</p>
