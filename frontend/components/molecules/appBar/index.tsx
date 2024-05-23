@@ -12,7 +12,7 @@ const AppBar = ({
   const router = useRouter();
 
   return (
-    <div className="bg-white bg-opacity-50 p-2 z-50 sticky top-0 flex items-center justify-between">
+    <div className="bg-white bg-opacity-90 p-2 z-50 sticky top-0 flex items-center justify-between rounded">
       {arrowBack && (
         <IoMdArrowBack
           onClick={() => router.back()}
