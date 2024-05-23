@@ -4,6 +4,7 @@ import CardPocket from "./cardPocket";
 import CopyText from "./copyText";
 import IconList from "./iconList";
 import InputPaymentAccount from "./inputPaymentAccount";
+import LogoutButton from "./logoutButton";
 import NavList from "./navList.tsx";
 import Select from "./select";
 import Textarea from "./textarea";
@@ -20,4 +21,5 @@ export {
   InputPaymentAccount,
   Textarea,
   AddPocketCard,
+  LogoutButton,
 };

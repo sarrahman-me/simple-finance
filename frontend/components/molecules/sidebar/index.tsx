@@ -50,7 +50,7 @@ export default function Sidebar() {
           }}
           className={`flex items-center space-x-3 p-2 rounded-md text-gray-500 cursor-pointer select-none hover:bg-gray-50`}
         >
-          <span className={`text-lg text-primary-600`}>{<CiLogout />}</span>
+          <span className={`text-lg text-red-600`}>{<CiLogout />}</span>
           <p className="lg:block hidden">Logout</p>
         </div>
       </div>
