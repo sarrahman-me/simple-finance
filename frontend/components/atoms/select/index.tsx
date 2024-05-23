@@ -90,7 +90,7 @@ const Select = ({
         </Listbox.Button>
 
         {/* pilihan listbox */}
-        <Listbox.Options className="mt-2 p-1.5 border border-primary-600 ring-primary-600 bg-white rounded-md shadow-md max-h-48 overflow-scroll outline-none">
+        <Listbox.Options className="mt-2 p-1.5 border border-primary-600 ring-primary-600 bg-white rounded-md shadow-sm max-h-48 overflow-scroll outline-none">
           {dataToUse.map((list, i) => (
             <Listbox.Option key={i} value={list}>
               {({ active, selected }) => (

@@ -61,7 +61,7 @@ export default function InputPaymentAccount({
         <Button onClick={handleCheck} icon={<MdOutlineContentPasteSearch />} />
       </div>
       {data?.account_number ? (
-        <div className="space-y-3 bg-white rounded p-2">
+        <div className="space-y-3 bg-white rounded p-2 shadow-sm">
           <p>PIC: {data?.pic}</p>
           <p>Name: {data?.name}</p>
           <p>Account Number: {data?.account_number}</p>

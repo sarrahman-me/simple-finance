@@ -15,7 +15,7 @@ const CardPocket = ({
   return (
     <div
       onClick={() => router.push(`/dashboard/pocket/${account_number}`)}
-      className="bg-white border rounded hover:shadow cursor-pointer p-2 py-3 space-y-2"
+      className="bg-white border rounded hover:shadow-none cursor-pointer p-2 py-3 space-y-2 shadow-sm"
     >
       <p className="text-base font-medium">{title}</p>
       <p>{formatCurrency(amount)}</p>

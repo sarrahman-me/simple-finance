@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_HOST_SERVER}/user/payment-account`,
+      `${process.env.NEXT_PUBLIC_HOST_SERVER}/payment/send`,
       {
         method: "POST",
         headers: {

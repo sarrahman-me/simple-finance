@@ -7,10 +7,12 @@ import {
   Textfield,
 } from "@/components/atoms";
 import { AppBar } from "@/components/molecules";
+import { useRouter } from "next/navigation";
 import { Loading, Notify } from "notiflix";
 import { FormEvent, useState } from "react";
 
 export default function Page() {
+  const router = useRouter();
   const [payload, setPayload] = useState({
     from_address: "",
     to_address: "",
@@ -38,6 +40,7 @@ export default function Page() {
     if (data.statusCode < 400) {
       Notify.success(data.message);
       Loading.remove();
+      router.push(`/dashboard/pocket/${payload.from_address}`);
       return;
     }
 

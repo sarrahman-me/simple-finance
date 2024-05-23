@@ -57,7 +57,7 @@ const Button = ({
 
   const variantStyle: Record<string, string> = {
     contained: `${colorStyle[color].contained}`,
-    outlined: `${colorStyle[color].outlined} border hover:shadow-md`,
+    outlined: `${colorStyle[color].outlined} border hover:shadow-sm`,
   };
 
   const sizeClass: Record<string, string> = {
