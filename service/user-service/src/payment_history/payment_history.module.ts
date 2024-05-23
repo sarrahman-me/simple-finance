@@ -3,11 +3,11 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { PaymentHistory } from './payment_history.model';
 import { PaymentHistoryService } from './payment_history.service';
 import { PaymentHistoryController } from './payment_history.controller';
-import { PaymentAccountModule } from '../payment_account/payment_account.module';
 import { PaymentHistoryConsumer } from './payment_history.consumer';
+import { Pocket } from 'src/pocket/pocket.model';
 
 @Module({
-  imports: [SequelizeModule.forFeature([PaymentHistory]), PaymentAccountModule],
+  imports: [SequelizeModule.forFeature([PaymentHistory, Pocket])],
   providers: [PaymentHistoryService],
   controllers: [PaymentHistoryController, PaymentHistoryConsumer],
 })

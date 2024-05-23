@@ -6,7 +6,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { PaymentAccount } from '../payment_account/payment_account.model';
+import { Pocket } from 'src/pocket/pocket.model';
 
 enum PaymentStatus {
   SUCCESS = 'success',
@@ -39,12 +39,12 @@ export class PaymentHistory extends Model<PaymentHistory> {
   @Column
   id_transaction: string;
 
-  @ForeignKey(() => PaymentAccount)
+  @ForeignKey(() => Pocket)
   @Column
-  account_number: string;
+  id_pocket: string;
 
   // relationship
 
-  @BelongsTo(() => PaymentAccount)
-  paymentAccount: PaymentAccount;
+  @BelongsTo(() => Pocket)
+  pocket: Pocket;
 }

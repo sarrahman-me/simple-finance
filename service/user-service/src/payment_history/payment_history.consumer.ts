@@ -13,14 +13,14 @@ export class PaymentHistoryConsumer {
     status,
     type,
     id_transaction,
-    account_number,
+    id_pocket,
   }: Partial<PaymentHistory>) {
     await this.historyService.create({
       amount,
       status,
       type,
       id_transaction,
-      account_number,
+      id_pocket,
     });
   }
 }

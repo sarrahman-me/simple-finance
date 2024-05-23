@@ -23,7 +23,7 @@ export async function GET() {
     }
 
     const totalBalance = data.reduce(
-      (acc, account) => acc + Number(account.balance),
+      (acc, account) => acc + (Number(account.balance) || 0),
       0
     );
 

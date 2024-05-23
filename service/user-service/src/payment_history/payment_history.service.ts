@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PaymentHistory } from './payment_history.model';
-import { PaymentAccountService } from '../payment_account/payment_account.service';
 import { InjectModel } from '@nestjs/sequelize';
+import { Pocket } from 'src/pocket/pocket.model';
 
 @Injectable()
 export class PaymentHistoryService {
@@ -9,18 +9,19 @@ export class PaymentHistoryService {
     @InjectModel(PaymentHistory)
     private readonly paymentHistory: typeof PaymentHistory,
 
-    private readonly paymentAccount: PaymentAccountService,
+    @InjectModel(Pocket)
+    private readonly pocket: typeof Pocket,
   ) {}
 
   /**
    * get all historical data based on payment accounts by pagination
-   * @param account_number
+   * @param id_pocket
    * @param {page: number, limit: number} payload
    * @returns relevant data
    */
 
   async findAllByPaymentAccount(
-    account_number: string,
+    id_pocket: string,
     {
       page,
       limit,
@@ -43,7 +44,7 @@ export class PaymentHistoryService {
       offset,
       limit,
       where: {
-        account_number,
+        id_pocket,
       },
     });
 
@@ -89,17 +90,16 @@ export class PaymentHistoryService {
     status,
     type,
     id_transaction,
-    account_number,
+    id_pocket,
   }: Partial<PaymentHistory>): Promise<PaymentHistory> {
-    const paymentAccount =
-      await this.paymentAccount.findByAccountNumber(account_number);
+    const pocketData = await this.pocket.findByPk(id_pocket);
 
-    if (!paymentAccount) {
-      throw new NotFoundException('payment account not found');
+    if (!pocketData) {
+      throw new NotFoundException('Pocket not found');
     }
 
     return this.paymentHistory.create({
-      account_number,
+      id_pocket,
       id_transaction,
       type,
       status,
