@@ -6,14 +6,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { PaymentHistoryService } from './payment_history.service';
-import { PaymentHistory } from './payment_history.model';
 import { AuthGuard } from '../auth/auth.guard';
+import { PocketHistory } from './pocket_history.model';
+import { PocketHistoryService } from './pocket_history.service';
 
 interface responseType {
   message: string;
   statusCode: number;
-  data: PaymentHistory | PaymentHistory[];
+  data: PocketHistory | PocketHistory[];
   metadata?: {
     page: number;
     limit: number;
@@ -23,8 +23,8 @@ interface responseType {
 }
 
 @Controller('history-account')
-export class PaymentHistoryController {
-  constructor(private readonly historyService: PaymentHistoryService) {}
+export class PocketHistoryController {
+  constructor(private readonly historyService: PocketHistoryService) {}
 
   @UseGuards(AuthGuard)
   @Get('/:account_number')

@@ -66,6 +66,7 @@ export class AuthService {
         name: existingUser.name,
         username: existingUser.username,
         email,
+        account_number: existingUser.payment_account.account_number,
       };
 
       // generate jwt token

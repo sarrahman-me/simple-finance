@@ -1,6 +1,6 @@
 import {
   Column,
-  HasMany,
+  HasOne,
   Model,
   PrimaryKey,
   Table,
@@ -26,7 +26,6 @@ export class Users extends Model<Users> {
   password: string;
 
   // relationship
-
-  @HasMany(() => PaymentAccount, { onDelete: 'CASCADE' })
-  payment_accounts: PaymentAccount[];
+  @HasOne(() => PaymentAccount, { onDelete: 'CASCADE' })
+  payment_account: PaymentAccount;
 }

@@ -10,6 +10,7 @@ import validator from 'validator';
 import * as bcrypt from 'bcrypt';
 import { GeneratorService } from '../generator/generator.service';
 import { PaymentAccountService } from 'src/payment_account/payment_account.service';
+import { PaymentAccount } from 'src/payment_account/payment_account.model';
 
 @Injectable()
 export class UsersService {
@@ -48,6 +49,9 @@ export class UsersService {
       where: {
         email,
       },
+      include: {
+        model: PaymentAccount,
+      },
     });
   }
 
@@ -84,16 +88,18 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // create a payment account
-    await this.paymentAccountService.add('123456', 'usd', username);
-
-    // adding data to the database
-    return this.usersModel.create({
+    // adding user data to the database
+    const addedUser = await this.usersModel.create({
       name,
       username,
       email,
       password: hashedPassword,
     });
+
+    // create a payment account
+    await this.paymentAccountService.add('123456', 'usd', username);
+
+    return addedUser;
   }
 
   /**

@@ -31,6 +31,7 @@ export class PaymentAccountController {
         name: string;
         username: string;
         email: string;
+        account_number: string;
       };
     },
     @Param('account_number') account_number: string,

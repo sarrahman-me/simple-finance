@@ -20,7 +20,7 @@ enum TransactionType {
 }
 
 @Table
-export class PaymentHistory extends Model<PaymentHistory> {
+export class PocketHistory extends Model<PocketHistory> {
   @Column({
     type: DataType.DECIMAL(15, 2),
   })

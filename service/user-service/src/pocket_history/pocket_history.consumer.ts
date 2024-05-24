@@ -1,11 +1,11 @@
 import { Controller } from '@nestjs/common';
-import { PaymentHistoryService } from './payment_history.service';
 import { EventPattern } from '@nestjs/microservices';
-import { PaymentHistory } from './payment_history.model';
+import { PocketHistoryService } from './pocket_history.service';
+import { PocketHistory } from './pocket_history.model';
 
 @Controller()
-export class PaymentHistoryConsumer {
-  constructor(private readonly historyService: PaymentHistoryService) {}
+export class PocketHistoryConsumer {
+  constructor(private readonly historyService: PocketHistoryService) {}
 
   @EventPattern('add.history_transaction')
   async createHistory({
@@ -14,7 +14,7 @@ export class PaymentHistoryConsumer {
     type,
     id_transaction,
     id_pocket,
-  }: Partial<PaymentHistory>) {
+  }: Partial<PocketHistory>) {
     await this.historyService.create({
       amount,
       status,

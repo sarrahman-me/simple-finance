@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PaymentHistory } from './payment_history.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { Pocket } from 'src/pocket/pocket.model';
+import { PocketHistory } from './pocket_history.model';
 
 @Injectable()
-export class PaymentHistoryService {
+export class PocketHistoryService {
   constructor(
-    @InjectModel(PaymentHistory)
-    private readonly paymentHistory: typeof PaymentHistory,
+    @InjectModel(PocketHistory)
+    private readonly pocketHistory: typeof PocketHistory,
 
     @InjectModel(Pocket)
     private readonly pocket: typeof Pocket,
@@ -30,7 +30,7 @@ export class PaymentHistoryService {
       limit: number;
     },
   ): Promise<{
-    data: PaymentHistory[];
+    data: PocketHistory[];
     metadata: {
       page: number;
       limit: number;
@@ -40,7 +40,7 @@ export class PaymentHistoryService {
   }> {
     const offset = (page - 1) * limit;
 
-    const { count, rows } = await this.paymentHistory.findAndCountAll({
+    const { count, rows } = await this.pocketHistory.findAndCountAll({
       offset,
       limit,
       where: {
@@ -69,8 +69,8 @@ export class PaymentHistoryService {
    * @returns transaction history
    */
 
-  async find(id: number): Promise<PaymentHistory> {
-    const data = await this.paymentHistory.findByPk(id);
+  async find(id: number): Promise<PocketHistory> {
+    const data = await this.pocketHistory.findByPk(id);
 
     if (!data) {
       throw new NotFoundException('History details not found');
@@ -81,7 +81,7 @@ export class PaymentHistoryService {
 
   /**
    * create a new transaction history
-   * @param {Partial<PaymentHistory>} payload
+   * @param {Partial<PocketHistory>} payload
    * @returns new history
    */
 
@@ -91,14 +91,14 @@ export class PaymentHistoryService {
     type,
     id_transaction,
     id_pocket,
-  }: Partial<PaymentHistory>): Promise<PaymentHistory> {
+  }: Partial<PocketHistory>): Promise<PocketHistory> {
     const pocketData = await this.pocket.findByPk(id_pocket);
 
     if (!pocketData) {
       throw new NotFoundException('Pocket not found');
     }
 
-    return this.paymentHistory.create({
+    return this.pocketHistory.create({
       id_pocket,
       id_transaction,
       type,

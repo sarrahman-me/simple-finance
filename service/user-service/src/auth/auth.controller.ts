@@ -80,6 +80,7 @@ export class AuthController {
         name: string;
         username: string;
         email: string;
+        account_number: string;
       };
     },
   ) {

@@ -22,10 +22,24 @@ export class PocketService {
   ) {}
 
   /**
+   * get all payment accounts based on the owner's payment Account
+   * @param account_number Account foreign key untuk user
+   * @returns all appropriate payment accounts
+   */
+
+  async findAllByAccountNumber(account_number: string): Promise<Pocket[]> {
+    return this.pocket.findAll({
+      where: {
+        account_number,
+      },
+    });
+  }
+
+  /**
    * Get pocket data based on matching id pocket and account number
    * This is useful for checking pocket ownership
-   * @param username
    * @param account_number
+   * @param id_pocket
    * @returns appropriate data
    */
 
@@ -53,9 +67,9 @@ export class PocketService {
   }
 
   /**
-   * create a new payment account
+   * create a new pocket
    * @param name
-   * @returns newly created payment account
+   * @returns newly created pocket
    */
 
   async add(
@@ -67,7 +81,7 @@ export class PocketService {
       await this.paymentAccount.findByPk(account_number);
 
     if (!existingPayAccount) {
-      throw new BadRequestException('Invalid Payment Account');
+      throw new BadRequestException('Invalid payment account');
     }
 
     // prevent duplication of Pocket with the same usernam for the same account
@@ -94,50 +108,56 @@ export class PocketService {
   }
 
   /**
-   * update payment account data, only pin and currency are allowed to be edited
-   * @param account_number primary key
+   * update pocket data, only pin and currency are allowed to be edited
+   * @param id_pocket primary key
    * @param {name: string, balance: number} payload
-   * @returns newly updated payment account
+   * @returns newly updated pocket
    */
 
   async update(
-    account_number: string,
+    id_pocket: string,
     { name, color }: Partial<Pocket>,
   ): Promise<Pocket> {
-    const existingData = await this.paymentAccount.findByPk(account_number);
+    const existingData = await this.pocket.findByPk(id_pocket);
 
     if (!existingData) {
-      throw new NotFoundException('payment account not found');
+      throw new NotFoundException('pocket not found');
     }
 
     await this.pocket.update(
       { name, color },
       {
         where: {
-          account_number,
+          id_pocket,
         },
       },
     );
 
-    return this.pocket.findByPk(account_number);
+    return this.pocket.findByPk(id_pocket);
   }
 
   /**
-   * delete payment account data
-   * @param account_number primary key
-   * @returns deleted payment account
+   * delete pocket data
+   * @param id_pocket primary key
+   * @returns deleted pocket
    */
 
-  async delete(id_pocket: string): Promise<Pocket> {
-    const data = await this.pocket.findByPk(id_pocket);
+  async delete(id_pocket: string, account_number: string): Promise<Pocket> {
+    const data = await this.pocket.findOne({
+      where: {
+        id_pocket,
+        account_number,
+      },
+    });
 
     if (!data) {
-      throw new NotFoundException('payment account not found');
+      throw new NotFoundException('pocket not found');
     }
 
     await this.pocket.destroy({
       where: {
         id_pocket,
+        account_number,
       },
     });
 
