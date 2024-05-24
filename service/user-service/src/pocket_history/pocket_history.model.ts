@@ -14,9 +14,14 @@ enum PaymentStatus {
   FAILED = 'failed',
 }
 
-enum TransactionType {
+enum RoleType {
   RECEIVER = 'receiver',
   SENDER = 'sender',
+}
+
+enum TransactionType {
+  INTERBANK = 'interbank',
+  INTERPOCKET = 'interpocket',
 }
 
 @Table
@@ -32,9 +37,14 @@ export class PocketHistory extends Model<PocketHistory> {
   status: string;
 
   @Column({
-    type: DataType.ENUM(...Object.values(TransactionType)),
+    type: DataType.ENUM(...Object.values(RoleType)),
   })
   type: string;
+
+  @Column({
+    type: DataType.ENUM(...Object.values(TransactionType)),
+  })
+  transaction_type: string;
 
   @Column
   id_transaction: string;

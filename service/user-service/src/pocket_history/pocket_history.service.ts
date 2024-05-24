@@ -143,6 +143,8 @@ export class PocketHistoryService {
     type,
     id_transaction,
     id_pocket,
+    account_number,
+    transaction_type,
   }: Partial<PocketHistory>): Promise<PocketHistory> {
     const pocketData = await this.pocket.findByPk(id_pocket);
 
@@ -156,6 +158,8 @@ export class PocketHistoryService {
       type,
       status,
       amount,
+      account_number,
+      transaction_type,
     });
   }
 }

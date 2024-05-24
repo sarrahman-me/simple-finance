@@ -143,6 +143,9 @@ export class TransactionService {
         amount,
         from_pocket,
         to_pocket,
+        sourcePocket.data.account_number,
+        destinationPocket.data.account_number,
+        'interpocket',
       );
 
       return createdTransaction;
@@ -252,8 +255,11 @@ export class TransactionService {
   private emitTransactionHistory(
     id_transaction: string,
     amount: number,
+    from_pocket: string,
+    to_pocket: string,
     from_address: string,
     to_address: string,
+    transaction_type: string,
   ): void {
     this.userServiceClient.emit('add.history_transaction', {
       amount,
@@ -261,6 +267,8 @@ export class TransactionService {
       type: 'sender',
       id_transaction,
       account_number: from_address,
+      id_pocket: from_pocket,
+      transaction_type,
     });
 
     this.userServiceClient.emit('add.history_transaction', {
@@ -269,6 +277,8 @@ export class TransactionService {
       type: 'receiver',
       id_transaction,
       account_number: to_address,
+      id_pocket: to_pocket,
+      transaction_type,
     });
   }
 }

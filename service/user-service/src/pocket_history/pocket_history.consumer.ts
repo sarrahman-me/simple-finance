@@ -14,6 +14,8 @@ export class PocketHistoryConsumer {
     type,
     id_transaction,
     id_pocket,
+    account_number,
+    transaction_type,
   }: Partial<PocketHistory>) {
     await this.historyService.create({
       amount,
@@ -21,6 +23,8 @@ export class PocketHistoryConsumer {
       type,
       id_transaction,
       id_pocket,
+      account_number,
+      transaction_type,
     });
   }
 }
