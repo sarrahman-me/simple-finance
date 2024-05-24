@@ -34,13 +34,7 @@ export class TransactionService {
    */
 
   async send(
-    {
-      amount,
-      currency,
-      description,
-      from_address,
-      to_address,
-    }: Partial<Transaction>,
+    { amount, description, from_address, to_address }: Partial<Transaction>,
     token: string,
   ): Promise<{
     transaction: Transaction;
@@ -99,7 +93,6 @@ export class TransactionService {
       const createTransaction = await this.transaction.create({
         id_transaction,
         amount,
-        currency,
         description,
         status: 'success',
         from_address,

@@ -143,6 +143,10 @@ export class PocketService {
    */
 
   async delete(id_pocket: string, account_number: string): Promise<Pocket> {
+    if (id_pocket === account_number) {
+      throw new BadRequestException('The main pocket must not be removed');
+    }
+
     const data = await this.pocket.findOne({
       where: {
         id_pocket,

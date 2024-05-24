@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Param,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
@@ -22,26 +23,74 @@ interface responseType {
   };
 }
 
-@Controller('history-account')
+@Controller('pocket-history')
 export class PocketHistoryController {
   constructor(private readonly historyService: PocketHistoryService) {}
 
   @UseGuards(AuthGuard)
-  @Get('/:account_number')
-  async findAll(
-    @Param('account_number') account_number: string,
+  @Get()
+  async findAllByPayment(
+    @Request()
+    req: {
+      user: {
+        name: string;
+        username: string;
+        email: string;
+        account_number: string;
+      };
+    },
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 25,
   ): Promise<responseType> {
     try {
       const { data, metadata } =
-        await this.historyService.findAllByPaymentAccount(account_number, {
-          limit,
-          page,
-        });
+        await this.historyService.findAllByPaymentAccount(
+          req.user.account_number,
+          {
+            limit,
+            page,
+          },
+        );
 
       return {
         message: 'successfully obtained all transaction history',
+        statusCode: HttpStatus.OK,
+        data,
+        metadata,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/:id_pocket')
+  async findAllByPocket(
+    @Request()
+    req: {
+      user: {
+        name: string;
+        username: string;
+        email: string;
+        account_number: string;
+      };
+    },
+    @Param('id_pocket') id_pocket: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 25,
+  ): Promise<responseType> {
+    try {
+      const { data, metadata } = await this.historyService.findAllByPocket(
+        id_pocket,
+        req.user.account_number,
+        {
+          limit,
+          page,
+        },
+      );
+
+      return {
+        message: 'successfully obtained all transaction history in pocket',
         statusCode: HttpStatus.OK,
         data,
         metadata,

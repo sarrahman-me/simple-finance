@@ -34,22 +34,15 @@ export class TransactionController {
       token: string;
     },
     @Body()
-    {
-      amount,
-      currency,
-      description,
-      from_address,
-      to_address,
-    }: Partial<Transaction>,
+    { amount, description, from_address, to_address }: Partial<Transaction>,
   ): Promise<responseType> {
     // Mandatory input validation
-    if (!amount || !currency || !from_address || !to_address) {
+    if (!amount || !from_address || !to_address) {
       throw new BadRequestException({
         message: 'incomplete data',
         error: {
           missing_fields: {
             amount: !amount ? 'amount is required' : '',
-            currency: !currency ? 'currency is required' : '',
             from_address: !from_address
               ? 'Payment account source must be filled in'
               : '',
@@ -75,7 +68,6 @@ export class TransactionController {
       const data = await this.transactionService.send(
         {
           amount,
-          currency,
           description,
           from_address,
           to_address,

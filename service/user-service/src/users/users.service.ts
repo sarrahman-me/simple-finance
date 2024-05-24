@@ -97,7 +97,7 @@ export class UsersService {
     });
 
     // create a payment account
-    await this.paymentAccountService.add('123456', 'usd', username);
+    await this.paymentAccountService.add('123456', 'usd', username, name);
 
     return addedUser;
   }

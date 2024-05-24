@@ -7,12 +7,20 @@ enum PaymentStatus {
   FAILED = 'failed',
 }
 
+enum TransactionType {
+  INTERBANK = 'interbank',
+  INTERPOCKET = 'interpocket',
+}
+
 export type TransactionDocument = HydratedDocument<Transaction>;
 
 @Schema({ timestamps: true })
 export class Transaction {
   @Prop()
   id_transaction: string;
+
+  @Prop({ type: String, enum: Object.values(TransactionType) })
+  transaction_type: TransactionType;
 
   @Prop({ type: Number })
   amount: number;
@@ -21,10 +29,19 @@ export class Transaction {
   status: PaymentStatus;
 
   @Prop()
-  currency: string;
+  description: string;
 
   @Prop()
-  description: string;
+  from_currency: string;
+
+  @Prop()
+  to_currency: string;
+
+  @Prop()
+  from_pocket: string;
+
+  @Prop()
+  to_pocket: string;
 
   @Prop()
   from_address: string;

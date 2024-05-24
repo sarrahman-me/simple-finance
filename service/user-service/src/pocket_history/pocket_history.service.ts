@@ -15,13 +15,64 @@ export class PocketHistoryService {
 
   /**
    * get all historical data based on payment accounts by pagination
-   * @param id_pocket
+   * @param account_number
    * @param {page: number, limit: number} payload
    * @returns relevant data
    */
 
   async findAllByPaymentAccount(
+    account_number: string,
+    {
+      page,
+      limit,
+    }: {
+      page: number;
+      limit: number;
+    },
+  ): Promise<{
+    data: PocketHistory[];
+    metadata: {
+      page: number;
+      limit: number;
+      totalData: number;
+      totalPages: number;
+    };
+  }> {
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await this.pocketHistory.findAndCountAll({
+      offset,
+      limit,
+      where: {
+        account_number,
+      },
+    });
+
+    // calculate total data and pages
+    const totalData = count;
+    const totalPages = Math.ceil(totalData / limit);
+
+    return {
+      data: rows,
+      metadata: {
+        limit,
+        page,
+        totalData,
+        totalPages,
+      },
+    };
+  }
+
+  /**
+   * get all historical data based on payment accounts by pagination
+   * @param id_pocket
+   * @param {page: number, limit: number} payload
+   * @returns relevant data
+   */
+
+  async findAllByPocket(
     id_pocket: string,
+    account_number: string,
     {
       page,
       limit,
@@ -45,6 +96,7 @@ export class PocketHistoryService {
       limit,
       where: {
         id_pocket,
+        account_number,
       },
     });
 

@@ -39,6 +39,9 @@ export class PocketHistory extends Model<PocketHistory> {
   @Column
   id_transaction: string;
 
+  @Column
+  account_number: string;
+
   @ForeignKey(() => Pocket)
   @Column
   id_pocket: string;

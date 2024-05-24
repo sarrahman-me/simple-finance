@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { PaymentAccount } from './payment_account.model';
 import { Users } from '../users/users.model';
 import { GeneratorService } from 'src/generator/generator.service';
+import { Pocket } from 'src/pocket/pocket.model';
 
 @Injectable()
 export class PaymentAccountService {
@@ -17,6 +18,9 @@ export class PaymentAccountService {
 
     @InjectModel(Users)
     private readonly users: typeof Users,
+
+    @InjectModel(Pocket)
+    private readonly pocket: typeof Pocket,
 
     private readonly generator: GeneratorService,
   ) {}
@@ -91,6 +95,7 @@ export class PaymentAccountService {
     pin: string,
     currency: string,
     username: string,
+    pic: string,
   ): Promise<PaymentAccount> {
     const existingUser = await this.users.findByPk(username);
 
@@ -111,12 +116,23 @@ export class PaymentAccountService {
 
     const account_number = this.generator.accountNumber();
 
-    return this.paymentAccount.create({
+    const addedData = await this.paymentAccount.create({
+      pic,
       account_number,
       username,
       pin,
       currency,
     });
+
+    await this.pocket.create({
+      id_pocket: account_number,
+      name: 'Main pocket',
+      color: '#0284c7',
+      balance: 0.0,
+      account_number,
+    });
+
+    return addedData;
   }
 
   /**

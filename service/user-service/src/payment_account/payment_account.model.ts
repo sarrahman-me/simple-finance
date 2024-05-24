@@ -17,6 +17,9 @@ export class PaymentAccount extends Model<PaymentAccount> {
   account_number: string;
 
   @Column
+  pic: string;
+
+  @Column
   pin: string;
 
   @Column
