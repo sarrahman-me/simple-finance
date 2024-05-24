@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -117,12 +118,25 @@ export class PocketController {
   @Patch('/:id_pocket')
   async update(
     @Param('id_pocket') id_pocket: string,
-    @Body() { name, color }: Partial<Pocket>,
+    @Body() { name, color, balance }: Partial<Pocket>,
   ): Promise<responseType> {
+    // Validate balance
+    if (balance) {
+      if (isNaN(balance) || balance < 0) {
+        throw new BadRequestException({
+          message: 'Invalid amount',
+          error: {
+            amount: 'amount must be a positive number',
+          },
+        });
+      }
+    }
+
     try {
       const data = await this.pocketService.update(id_pocket, {
         name,
         color,
+        balance,
       });
 
       return {

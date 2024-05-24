@@ -10,16 +10,12 @@ import {
 import { TransactionService } from './transaction.service';
 import { Transaction } from './transaction.schema';
 import { AuthGuard } from './auth.guard';
-import { IPaymentAccount } from './interface/payment_account.interface';
+// import { IPaymentAccount } from './interface/payment_account.interface';
 
 interface responseType {
   message: string;
   statusCode: number;
-  data: {
-    transaction: Transaction;
-    from: Partial<IPaymentAccount>;
-    to: Partial<IPaymentAccount>;
-  };
+  data: Transaction;
 }
 
 @Controller('')
@@ -34,20 +30,25 @@ export class TransactionController {
       token: string;
     },
     @Body()
-    { amount, description, from_address, to_address }: Partial<Transaction>,
+    {
+      transaction_type,
+      amount,
+      from_pocket,
+      to_pocket,
+      description,
+      from_address,
+      to_address,
+    }: Partial<Transaction>,
   ): Promise<responseType> {
     // Mandatory input validation
-    if (!amount || !from_address || !to_address) {
+    if (!amount || !transaction_type) {
       throw new BadRequestException({
         message: 'incomplete data',
         error: {
           missing_fields: {
             amount: !amount ? 'amount is required' : '',
-            from_address: !from_address
-              ? 'Payment account source must be filled in'
-              : '',
-            to_address: !to_address
-              ? 'payment account destination must be filled in'
+            transaction_type: !transaction_type
+              ? 'transaction type is required'
               : '',
           },
         },
@@ -67,7 +68,10 @@ export class TransactionController {
     try {
       const data = await this.transactionService.send(
         {
+          transaction_type,
           amount,
+          from_pocket,
+          to_pocket,
           description,
           from_address,
           to_address,

@@ -116,7 +116,7 @@ export class PocketService {
 
   async update(
     id_pocket: string,
-    { name, color }: Partial<Pocket>,
+    { name, color, balance }: Partial<Pocket>,
   ): Promise<Pocket> {
     const existingData = await this.pocket.findByPk(id_pocket);
 
@@ -125,7 +125,7 @@ export class PocketService {
     }
 
     await this.pocket.update(
-      { name, color },
+      { name, color, balance },
       {
         where: {
           id_pocket,
