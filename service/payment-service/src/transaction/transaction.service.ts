@@ -9,7 +9,6 @@ import {
   Transport,
 } from '@nestjs/microservices';
 import { IPocketDetails } from './interface/pocket_details.interface';
-import { IAccountCheck } from './interface/account_check.interface';
 
 @Injectable()
 export class TransactionService {
@@ -41,10 +40,6 @@ export class TransactionService {
       from_pocket,
       to_pocket,
       description,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      from_address,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      to_address,
     }: Partial<Transaction>,
     token: string,
   ): Promise<Transaction> {
@@ -61,22 +56,14 @@ export class TransactionService {
           token,
         );
       } else if (transaction_type === 'interbank') {
-        // await this.handleInterBank(
-        //   {
-        //     amount,
-        //     from_currency,
-        //     to_currency,
-        //     from_pocket,
-        //     to_pocket,
-        //     description,
-        //     from_address,
-        //     to_address,
-        //   },
-        //   token,
-        // );
-
-        throw new BadRequestException(
-          'does not yet support sending between user',
+        transaction = await this.handleInterBank(
+          {
+            amount,
+            from_pocket,
+            to_pocket,
+            description,
+          },
+          token,
         );
       } else {
         throw new BadRequestException('Invalid type transaction');
@@ -154,40 +141,78 @@ export class TransactionService {
     }
   }
 
-  // private async handleInterBank(
-  //   {
-  //     amount,
-  //     from_currency,
-  //     to_currency,
-  //     from_pocket,
-  //     to_pocket,
-  //     description,
-  //     from_address,
-  //     to_address,
-  //   }: Partial<Transaction>,
-  //   token: string,
-  // ) {
-  //   // cek dulu apakah pocket ada dan sumber dari akun yang sama dengan pengirim
-  //   const sourcePocket = await this.getPocketDetails(from_pocket, token);
+  private async handleInterBank(
+    { amount, from_pocket, to_pocket, description }: Partial<Transaction>,
+    token: string,
+  ): Promise<Transaction> {
+    // cek dulu apakah pocket ada dan sumber dari akun yang sama dengan pengirim
+    const sourcePocket = await this.getPocketDetails(from_pocket, token);
 
-  //   // cek akun pembayaran dan pocket tujuan ada
-  //   const destinationAccount = await this.checkAccount(to_address, token);
+    // cek akun pembayaran dan pocket tujuan ada
+    const destinationPocket = await this.checkPocket(to_pocket, token);
 
-  //   // Make sure the balance from the pocket source is sufficient
-  //   if (Number(sourcePocket.data.balance) < amount) {
-  //     throw new BadRequestException(
-  //       'the source account balance is insufficient',
-  //     );
-  //   }
+    // Make sure the balance from the pocket source is sufficient
+    if (Number(sourcePocket.data.balance) < amount) {
+      throw new BadRequestException(
+        'the source account balance is insufficient',
+      );
+    }
 
-  //   // TODO:  melakukan konversi dari uang sumber ke rekening tujuan jika berbeda
+    // TODO:  melakukan konversi dari uang sumber ke rekening tujuan jika berbeda
+    if (
+      sourcePocket.data.payment_account.currency !==
+      destinationPocket.data.payment_account.currency
+    ) {
+      throw new BadRequestException(
+        'Does not support transactions in different currencies ',
+      );
+    }
 
-  //   // create a new transaction
+    // membuat transaksi
+    const id_transaction = uuidv4();
 
-  //   // membuat transaksi
-  //   // mengupdate saldo masing masing
-  //   // mengirimkan data untuk riwayat transaksi
-  // }
+    // create a new transaction
+    const createdTransaction = await this.transaction.create({
+      id_transaction,
+      transaction_type: 'interbank',
+      amount,
+      status: 'success',
+      description,
+      from_currency: sourcePocket.data.payment_account.currency,
+      to_currency: destinationPocket.data.payment_account.currency,
+      from_pocket,
+      to_pocket,
+      from_address: sourcePocket.data.account_number,
+      to_address: destinationPocket.data.account_number,
+      timestamp: new Date(),
+    });
+
+    // mengupdate saldo masing masing
+    await this.updateAccountBalance(
+      from_pocket,
+      Number(sourcePocket.data.balance) - amount,
+      token,
+    );
+
+    await this.updateAccountBalance(
+      to_pocket,
+      Number(destinationPocket.data.balance) + amount,
+      token,
+    );
+
+    // mengirimkan data untuk riwayat transaksi
+    this.emitTransactionHistory(
+      id_transaction,
+      amount,
+      from_pocket,
+      to_pocket,
+      sourcePocket.data.account_number,
+      destinationPocket.data.account_number,
+      'interbank',
+    );
+
+    return createdTransaction;
+  }
 
   private async getPocketDetails(
     id_pocket: string,
@@ -212,12 +237,12 @@ export class TransactionService {
     return data;
   }
 
-  private async checkAccount(
-    account_number: string,
+  private async checkPocket(
+    id_pocket: string,
     token: string,
-  ): Promise<IAccountCheck> {
+  ): Promise<IPocketDetails> {
     const response = await fetch(
-      `${process.env.USER_SERVICE}/user/payment-account/check/${account_number}`,
+      `${process.env.USER_SERVICE}/user/pocket/check/${id_pocket}`,
       {
         method: 'GET',
         headers: {
@@ -226,10 +251,10 @@ export class TransactionService {
         },
       },
     );
-    const data: IAccountCheck = await response.json();
+    const data: IPocketDetails = await response.json();
 
     if (!data) {
-      throw new BadRequestException('Payment Account not found');
+      throw new BadRequestException('Pocket not found');
     }
 
     return data;

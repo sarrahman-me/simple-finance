@@ -10,7 +10,6 @@ import {
 import { TransactionService } from './transaction.service';
 import { Transaction } from './transaction.schema';
 import { AuthGuard } from './auth.guard';
-// import { IPaymentAccount } from './interface/payment_account.interface';
 
 interface responseType {
   message: string;
@@ -36,8 +35,6 @@ export class TransactionController {
       from_pocket,
       to_pocket,
       description,
-      from_address,
-      to_address,
     }: Partial<Transaction>,
   ): Promise<responseType> {
     // Mandatory input validation
@@ -73,8 +70,6 @@ export class TransactionController {
           from_pocket,
           to_pocket,
           description,
-          from_address,
-          to_address,
         },
         req.token,
       );

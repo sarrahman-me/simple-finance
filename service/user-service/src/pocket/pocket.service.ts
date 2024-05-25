@@ -66,6 +66,23 @@ export class PocketService {
     return data;
   }
 
+  async checkPocket(id_pocket: string): Promise<Pocket> {
+    const data = await this.pocket.findOne({
+      where: {
+        id_pocket,
+      },
+      include: {
+        model: PaymentAccount,
+      },
+    });
+
+    if (!data) {
+      throw new NotFoundException('Pocket not found ');
+    }
+
+    return data;
+  }
+
   /**
    * create a new pocket
    * @param name

@@ -54,6 +54,22 @@ export class PocketController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('/check/:id_pocket')
+  async check(@Param('id_pocket') id_pocket: string): Promise<responseType> {
+    try {
+      const data = await this.pocketService.checkPocket(id_pocket);
+
+      return {
+        message: 'successfully check pocket',
+        statusCode: HttpStatus.OK,
+        data,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @UseGuards(AuthGuard)
   @Get('/:id_pocket')
   async find(
     @Request()
