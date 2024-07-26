@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { PaymentAccount } from './payment_account.model';
-import { GeneratorService } from '../generator/generator.service';
 import { Users } from '../users/users.model';
+import { GeneratorService } from 'src/generator/generator.service';
+import { Pocket } from 'src/pocket/pocket.model';
 
 @Injectable()
 export class PaymentAccountService {
@@ -18,22 +19,11 @@ export class PaymentAccountService {
     @InjectModel(Users)
     private readonly users: typeof Users,
 
+    @InjectModel(Pocket)
+    private readonly pocket: typeof Pocket,
+
     private readonly generator: GeneratorService,
   ) {}
-
-  /**
-   * get all payment accounts based on the owner's username
-   * @param username foreign key untuk user
-   * @returns all appropriate payment accounts
-   */
-
-  async findAllByUsername(username: string): Promise<PaymentAccount[]> {
-    return this.paymentAccount.findAll({
-      where: {
-        username,
-      },
-    });
-  }
 
   /**
    * Get payment account data based on matching username and account number
@@ -73,10 +63,8 @@ export class PaymentAccountService {
    */
 
   async findByAccountNumber(account_number: string): Promise<{
-    name: string;
     account_number: string;
     pic: string;
-    balance: number;
   }> {
     const data = await this.paymentAccount.findOne({
       where: {
@@ -93,9 +81,7 @@ export class PaymentAccountService {
 
     return {
       account_number: data.account_number,
-      name: data.name,
       pic: data.user.name,
-      balance: data.balance,
     };
   }
 
@@ -105,17 +91,21 @@ export class PaymentAccountService {
    * @returns newly created payment account
    */
 
-  async add(name: string, username: string): Promise<PaymentAccount> {
+  async add(
+    pin: string,
+    currency: string,
+    username: string,
+    pic: string,
+  ): Promise<PaymentAccount> {
     const existingUser = await this.users.findByPk(username);
 
     if (!existingUser) {
       throw new BadRequestException('Invalid User');
     }
 
-    // prevent duplication of payment accounts with the same name for the same account
+    // prevent duplication of payment accounts with the same usernam for the same account
     const existingData = await this.paymentAccount.findOne({
       where: {
-        name,
         username,
       },
     });
@@ -125,18 +115,28 @@ export class PaymentAccountService {
     }
 
     const account_number = this.generator.accountNumber();
-    const balance_default = 0.0;
 
-    return this.paymentAccount.create({
+    const addedData = await this.paymentAccount.create({
+      pic,
       account_number,
       username,
-      balance: balance_default,
-      name,
+      pin,
+      currency,
     });
+
+    await this.pocket.create({
+      id_pocket: account_number,
+      name: 'Main pocket',
+      color: '#0284c7',
+      balance: 0.0,
+      account_number,
+    });
+
+    return addedData;
   }
 
   /**
-   * update payment account data, only name and balance are allowed to be edited
+   * update payment account data, only pin and currency are allowed to be edited
    * @param account_number primary key
    * @param {name: string, balance: number} payload
    * @returns newly updated payment account
@@ -144,7 +144,7 @@ export class PaymentAccountService {
 
   async update(
     account_number: string,
-    { name, balance }: Partial<PaymentAccount>,
+    { pin, currency }: Partial<PaymentAccount>,
   ): Promise<PaymentAccount> {
     const existingData = await this.paymentAccount.findByPk(account_number);
 
@@ -153,7 +153,7 @@ export class PaymentAccountService {
     }
 
     await this.paymentAccount.update(
-      { name, balance },
+      { pin, currency },
       {
         where: {
           account_number,
@@ -170,22 +170,12 @@ export class PaymentAccountService {
    * @returns deleted payment account
    */
 
-  async delete(
-    account_number: string,
-    username: string,
-  ): Promise<PaymentAccount> {
+  async delete(username: string): Promise<PaymentAccount> {
     const data = await this.paymentAccount.findOne({
       where: {
-        account_number,
         username,
       },
     });
-
-    if (data.balance > 0) {
-      throw new BadRequestException(
-        'the payment account has a remaining balance, move the balance to another account first before deleting',
-      );
-    }
 
     if (!data) {
       throw new NotFoundException('payment account not found');
@@ -193,7 +183,6 @@ export class PaymentAccountService {
 
     await this.paymentAccount.destroy({
       where: {
-        account_number,
         username,
       },
     });

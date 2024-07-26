@@ -6,14 +6,13 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Users } from './users.model';
 
 interface responseType {
   message: string;
-  status: number;
+  statusCode: number;
   data: Users | Users[];
   metadata?: {
     page: number;
@@ -27,30 +26,6 @@ interface responseType {
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  async findAll(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 25,
-    @Query('search') search?: string,
-  ): Promise<responseType> {
-    try {
-      const { data, metadata } = await this.usersService.findAll({
-        limit,
-        page,
-        search,
-      });
-
-      return {
-        message: 'Successfully got all user data',
-        status: HttpStatus.OK,
-        data,
-        metadata,
-      };
-    } catch (error) {
-      throw error;
-    }
-  }
-
   @Get('/:username')
   async find(@Param('username') username: string): Promise<responseType> {
     try {
@@ -58,7 +33,7 @@ export class UsersController {
 
       return {
         message: 'Successfully got user data',
-        status: HttpStatus.OK,
+        statusCode: HttpStatus.OK,
         data,
       };
     } catch (error) {
@@ -76,7 +51,7 @@ export class UsersController {
 
       return {
         message: 'Successfully updated user data',
-        status: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.ACCEPTED,
         data,
       };
     } catch (error) {
@@ -91,7 +66,7 @@ export class UsersController {
 
       return {
         message: 'Successfully deleted user data',
-        status: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.ACCEPTED,
         data,
       };
     } catch (error) {

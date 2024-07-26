@@ -1,8 +1,6 @@
 import {
   BelongsTo,
   Column,
-  DataType,
-  Default,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -19,13 +17,13 @@ export class PaymentAccount extends Model<PaymentAccount> {
   account_number: string;
 
   @Column
-  name: string;
+  pic: string;
 
-  @Default(0.0)
-  @Column({
-    type: DataType.DECIMAL(15, 2),
-  })
-  balance: number;
+  @Column
+  pin: string;
+
+  @Column
+  currency: string;
 
   @ForeignKey(() => Users)
   @Column

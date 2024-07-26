@@ -7,11 +7,13 @@ import { UsersModule } from './users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { PaymentAccountModule } from './payment_account/payment_account.module';
 import { PaymentAccount } from './payment_account/payment_account.model';
-import { PaymentHistoryModule } from './payment_history/payment_history.module';
-import { PaymentHistory } from './payment_history/payment_history.model';
+import { PocketHistoryModule } from './pocket_history/pocket_history.module';
+import { PocketHistory } from './pocket_history/pocket_history.model';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
+import { Pocket } from './pocket/pocket.model';
+import { PocketModule } from './pocket/pocket.module';
 
 @Module({
   imports: [
@@ -38,7 +40,7 @@ import { JwtModule } from '@nestjs/jwt';
       username: 'postgres',
       password: process.env.DB_PASSWORD,
       database: 'finance',
-      models: [Users, PaymentAccount, PaymentHistory],
+      models: [Users, PaymentAccount, PocketHistory, Pocket],
       autoLoadModels: true,
     }),
 
@@ -73,7 +75,8 @@ import { JwtModule } from '@nestjs/jwt';
      * other modules
      */
     PaymentAccountModule,
-    PaymentHistoryModule,
+    PocketHistoryModule,
+    PocketModule,
     AuthModule,
     UsersModule,
   ],

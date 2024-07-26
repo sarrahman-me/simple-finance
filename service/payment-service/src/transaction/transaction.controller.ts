@@ -10,16 +10,11 @@ import {
 import { TransactionService } from './transaction.service';
 import { Transaction } from './transaction.schema';
 import { AuthGuard } from './auth.guard';
-import { IPaymentAccount } from './interface/payment_account.interface';
 
 interface responseType {
   message: string;
-  status: number;
-  data: {
-    transaction: Transaction;
-    from: Partial<IPaymentAccount>;
-    to: Partial<IPaymentAccount>;
-  };
+  statusCode: number;
+  data: Transaction;
 }
 
 @Controller('')
@@ -35,26 +30,22 @@ export class TransactionController {
     },
     @Body()
     {
+      transaction_type,
       amount,
-      currency,
+      from_pocket,
+      to_pocket,
       description,
-      from_address,
-      to_address,
     }: Partial<Transaction>,
   ): Promise<responseType> {
     // Mandatory input validation
-    if (!amount || !currency || !from_address || !to_address) {
+    if (!amount || !transaction_type) {
       throw new BadRequestException({
         message: 'incomplete data',
         error: {
           missing_fields: {
             amount: !amount ? 'amount is required' : '',
-            currency: !currency ? 'currency is required' : '',
-            from_address: !from_address
-              ? 'Payment account source must be filled in'
-              : '',
-            to_address: !to_address
-              ? 'payment account destination must be filled in'
+            transaction_type: !transaction_type
+              ? 'transaction type is required'
               : '',
           },
         },
@@ -74,18 +65,18 @@ export class TransactionController {
     try {
       const data = await this.transactionService.send(
         {
+          transaction_type,
           amount,
-          currency,
+          from_pocket,
+          to_pocket,
           description,
-          from_address,
-          to_address,
         },
         req.token,
       );
 
       return {
         message: 'successfully sent money to the destination account',
-        status: HttpStatus.ACCEPTED,
+        statusCode: HttpStatus.ACCEPTED,
         data,
       };
     } catch (error) {

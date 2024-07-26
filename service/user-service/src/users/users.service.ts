@@ -8,69 +8,19 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Users } from './users.model';
 import validator from 'validator';
 import * as bcrypt from 'bcrypt';
-import { Op } from 'sequelize';
 import { GeneratorService } from '../generator/generator.service';
+import { PaymentAccountService } from 'src/payment_account/payment_account.service';
+import { PaymentAccount } from 'src/payment_account/payment_account.model';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(Users) private readonly usersModel: typeof Users,
 
+    private readonly paymentAccountService: PaymentAccountService,
+
     private readonly generator: GeneratorService,
   ) {}
-
-  /**
-   * get all user data using pagination
-   * @returns all users
-   */
-
-  async findAll({
-    page,
-    limit,
-    search,
-  }: {
-    page: number;
-    limit: number;
-    search?: string;
-  }): Promise<{
-    data: Users[];
-    metadata: {
-      page: number;
-      limit: number;
-      totalData: number;
-      totalPages: number;
-    };
-  }> {
-    const offset = (page - 1) * limit;
-    let whereClause = {};
-
-    // use search keywords, only if they exist
-    if (search) {
-      whereClause = {
-        [Op.or]: [{ name: { [Op.like]: `%${search}%` } }],
-      };
-    }
-
-    const { count, rows } = await this.usersModel.findAndCountAll({
-      offset,
-      limit,
-      where: whereClause,
-    });
-
-    // calculate total data and pages
-    const totalData = count;
-    const totalPages = Math.ceil(totalData / limit);
-
-    return {
-      data: rows,
-      metadata: {
-        limit,
-        page,
-        totalData,
-        totalPages,
-      },
-    };
-  }
 
   /**
    * Get users by username
@@ -98,6 +48,9 @@ export class UsersService {
     return this.usersModel.findOne({
       where: {
         email,
+      },
+      include: {
+        model: PaymentAccount,
       },
     });
   }
@@ -135,13 +88,18 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // adding data to the database
-    return this.usersModel.create({
+    // adding user data to the database
+    const addedUser = await this.usersModel.create({
       name,
       username,
       email,
       password: hashedPassword,
     });
+
+    // create a payment account
+    await this.paymentAccountService.add('123456', 'usd', username, name);
+
+    return addedUser;
   }
 
   /**
@@ -203,6 +161,9 @@ export class UsersService {
     if (!existingUser) {
       throw new NotFoundException('user not found');
     }
+
+    // delete payment account
+    await this.paymentAccountService.delete(username);
 
     // delete data from the database
     await this.usersModel.destroy({
