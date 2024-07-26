@@ -1,9 +1,5 @@
 # Payment Services Documentation
 
-## Short Description
-
-Payment services are used for core transaction purposes such as sending money from one account to another
-
 ## Tech Stack
 
 - Programming language: Typescript
@@ -21,13 +17,13 @@ Payment services are used for core transaction purposes such as sending money fr
 
 ### Transaction
 
-- `POST` **/payment/send**: Send money from the logged in user's payment account to any registered payment account
+- `POST` **/payment/send**: Kirim uang dari akun pembayaran pengguna yang masuk ke akun pembayaran terdaftar mana pun
 
-## API Documentation
+## Dokumentasi api
 
-I provide documentation with postman that you can access [here](https://documenter.getpostman.com/view/29090922/2sA3JM71wm#fddfb529-e12c-43e9-9f91-41266a768dc9)
+Saya menyediakan dokumentasi dengan postman yang dapat Anda akses [disini](https://documenter.getpostman.com/view/29090922/2sA3JM71wm#fddfb529-e12c-43e9-9f91-41266a768dc9)
 
-If you already have the app running, you can access this to open the documentation with swagger
+Jika Anda sudah menjalankan aplikasi, Anda dapat mengaksesnya untuk membuka dokumentasi dengan swagger
 
 ```bash
 $ http://localhost/payment/docs

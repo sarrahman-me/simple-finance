@@ -1,9 +1,5 @@
 # User Services Documentation
 
-## Short Description
-
-User service is an api that will handle account creation (authentication),manage user data, including managing payment accounts and transaction history
-
 ## Tech Stack
 
 - Programming language: Typescript
@@ -21,50 +17,50 @@ User service is an api that will handle account creation (authentication),manage
 
 ### Auth
 
-- `POST` **/user/auth/register**: New user registration
-- `POST` **/user/auth/login**: Sign in for existing users
-- `GET` **/user/auth/profile**: Get the data of the currently logged in user
+- `POST` **/user/auth/register**: Pendaftaran pengguna baru
+- `POST` **/user/auth/login**: Masuk untuk pengguna yang sudah ada
+- `GET` **/user/auth/profile**: Dapatkan data pengguna yang sedang login
 
 ### User
 
-- `GET` **/user**: Get all user data
-- `GET` **/user/:username**: Get user data based on username
-- `PATCH` **/user/:username**: Updating user data based on username
-- `DELETE` **/user/:username**: Deleting user data based on username
+- `GET` **/user**: Dapatkan semua data pengguna
+- `GET` **/user/:username**: Dapatkan data pengguna berdasarkan nama pengguna
+- `PATCH` **/user/:username**: Memperbarui data pengguna berdasarkan nama pengguna
+- `DELETE` **/user/:username**: Menghapus data pengguna berdasarkan nama pengguna
 
 ### Payment Account
 
-- `GET` **/user/payment-account**: Get all payment account data owned by the logged in user (can't see other users' payment accounts)
-- `GET` **/user/payment-account/:account_number**: Get details of a payment account (can't see other users' payment accounts)
-- `GET` **/user/payment-account/check/:account_number**: Check payment account details and can view other users' payment accounts
-- `POST` **/user/payment-account**: Creates a new payment account for the currently logged in user
-- `PATCH` **/user/payment-account/:account_number**: Edit a user's payment account by account number
-- `DELETE` **/user/payment-account/:account_number**: Delete a user's payment account by account number
+- `GET` **/user/payment-account**: Dapatkan semua data akun pembayaran yang dimiliki oleh pengguna yang masuk (tidak dapat melihat akun pembayaran pengguna lain)
+- `GET` **/user/payment-account/:account_number**: Dapatkan detail akun pembayaran (tidak dapat melihat akun pembayaran pengguna lain)
+- `GET` **/user/payment-account/check/:account_number**: Periksa detail akun pembayaran dan dapat melihat akun pembayaran pengguna lain
+- `POST` **/user/payment-account**: Membuat akun pembayaran baru untuk pengguna yang saat ini masuk
+- `PATCH` **/user/payment-account/:account_number**: Edit akun pembayaran pengguna berdasarkan nomor akun
+- `DELETE` **/user/payment-account/:account_number**: Hapus akun pembayaran pengguna berdasarkan nomor akun
 
 ### Payment History
 
-- `GET` **/user/payment-history/:account_number**: Get all transaction history based on a specific account number
-- `GET` **/user/payment-history/:id**: Get details of a transaction history based on a specific id
+- `GET` **/user/payment-history/:account_number**: Dapatkan semua riwayat transaksi berdasarkan nomor akun tertentu
+- `GET` **/user/payment-history/:id**: Dapatkan detail riwayat transaksi berdasarkan id tertentu
 
   > There is no endpoint to add history data because history data is automatically sent with rabbitmq when the transaction is successful
 
 ## Testing
 
-This service provides tests that you can run, but before you test it, make sure you first run the entire application and database with docker before testing it.
+Service ini menyediakan pengujian yang dapat Anda jalankan, tetapi sebelum mengujinya, pastikan Anda terlebih dahulu menjalankan seluruh aplikasi dan basis data dengan docker sebelum mengujinya.
 
 ```bash
 $ npm run test
 ```
 
-This is the test result that I ran on my local computer
+Ini adalah hasil tes yang saya jalankan di komputer lokal saya
 
 ![Testing result](https://ik.imagekit.io/sarrahmanme/Screenshot%202024-05-11%20at%2016.56.50.png?updatedAt=1715421424126)
 
 ## API Documentation
 
-I provide documentation with postman that you can access [here](https://documenter.getpostman.com/view/29090922/2sA3JM71wm#fddfb529-e12c-43e9-9f91-41266a768dc9)
+Saya menyediakan dokumentasi dengan postman yang dapat Anda akses [disini](https://documenter.getpostman.com/view/29090922/2sA3JM71wm#fddfb529-e12c-43e9-9f91-41266a768dc9)
 
-If you already have the app running, you can access this to open the documentation with swagger
+Jika Anda sudah menjalankan aplikasi, Anda dapat mengaksesnya untuk membuka dokumentasi dengan swagger
 
 ```bash
 $ http://localhost/user/docs

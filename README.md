@@ -1,8 +1,8 @@
-# Task documentation from ConcreteAi
+# Dokumentasi untuk tugas magang backend developer Dot Indonesia
 
-## Short Description
+## Deskripsi singkat
 
-This is an assignment given to me from ConcreteAi to test my programming skills because I am applying for a job as a software engineer
+Ini adalah tugas sederhana untuk menggambarkan kemampuan coding untuk melamar kerja magang di dot indonesia
 
 ## Tech Stack
 
@@ -14,29 +14,29 @@ This is an assignment given to me from ConcreteAi to test my programming skills 
 - Gateway: Nginx
 - Containerization: Docker & Docker Compose
 
-## Installation and usage guide
+## Instalasi dan cara penggunaan
 
-Docker is the easiest and most secure way to run these applications without any configuration issues. If you don't have Docker yet, you can download it from the official Docker site.
+Docker adalah cara termudah dan teraman untuk menjalankan aplikasi ini tanpa masalah konfigurasi apa pun. Jika Anda belum memiliki Docker, Anda dapat mengunduhnya dari situs resmi Docker.
 
-1. Clone this repository from GitHub
+1. Klon repositori ini dari GitHub
 
    ```bash
    git clone https://github.com/sarrahman-me/simple-finance.git
    ```
 
-2. Open a terminal and navigate to the services directory containing the docker-compose.yml file
+2. Buka terminal dan navigasikan ke direktori yang berisi file docker-compose.yml
 
    ```bash
    cd /simple-finance/service
    ```
 
-3. Run all applications and databases using docker
+3. Jalankan semua aplikasi dan database menggunakan docker
 
    ```bash
    docker-compose up
    ```
 
-4. Make sure everything is running by trying to access the api gateway
+4. Pastikan semuanya berjalan dengan mencoba mengakses gateway api
 
    ```bash
    http://localhost
@@ -48,8 +48,8 @@ Docker is the easiest and most secure way to run these applications without any 
 
 ## API Documentation
 
-This application has 2 services, user-service and payment-service
+Aplikasi ini memiliki 2 service, service pengguna dan service pembayaran
 
-If you want to get clearer documentation on each service, you can open the folder from GitHub, I have written a readme.md file for each service.
+Jika Anda ingin mendapatkan dokumentasi yang lebih jelas pada setiap service, Anda dapat membuka folder dari GitHub, saya telah menulis file readme.md untuk setiap service.
 
-I also prepared postman documentation for all endpoints of all services [here](https://documenter.getpostman.com/view/29090922/2sA3JM71wm#fddfb529-e12c-43e9-9f91-41266a768dc9)
+Saya juga menyiapkan dokumentasi postman untuk semua endpoint dari semua service [disini](https://documenter.getpostman.com/view/29090922/2sA3JM71wm#fddfb529-e12c-43e9-9f91-41266a768dc9)
